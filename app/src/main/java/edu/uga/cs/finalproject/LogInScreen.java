@@ -50,9 +50,5 @@ public class LogInScreen extends AppCompatActivity {
             finish();
         });
 
-
-
-
-
     } // onCreate
 }
