@@ -37,6 +37,7 @@ public class LogInScreen extends AppCompatActivity {
         loginButton = findViewById(R.id.loginButton);
         registerButton = findViewById(R.id.registerButton);
 
+
         // Set up button listeners
         loginButton.setOnClickListener(v -> {
             Intent intent = new Intent(this, MainScreen.class);
