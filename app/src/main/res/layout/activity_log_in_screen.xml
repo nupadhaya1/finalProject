@@ -112,5 +112,14 @@
             android:textSize="12sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="firebase doesn't work"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
