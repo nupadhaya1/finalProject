@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="237dp"
             android:gravity="center"
-            android:text="Find A Driver:"
+            android:text="Find A Driver"
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -41,8 +41,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginLeft="50dp"
                 android:background="@color/white"
                 android:ems="10"
+                android:hint=" Start Location"
                 android:inputType="textPassword"
                 android:textColor="@color/black" />
         </TableRow>
@@ -67,11 +69,50 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="25dp"
+                android:layout_marginLeft="75dp"
                 android:background="@color/white"
                 android:ems="10"
+                android:hint=" Desired Location"
                 android:inputType="textPassword" />
+
         </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="25dp"
+                android:text="Passengers:"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/editTextText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="-10dp"
+                android:background="@color/white"
+                android:ems="10"
+                android:hint=" Number of People"
+                android:inputType="text" />
+
+        </TableRow>
+
+        <Button
+            android:id="@+id/searchRideButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/white"
+            android:text="Search"
+            android:textColor="@color/black" />
 
     </LinearLayout>
 

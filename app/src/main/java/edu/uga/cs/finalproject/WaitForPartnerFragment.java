@@ -7,14 +7,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link RideFragment#newInstance} factory method to
+ * Use the {@link WaitForPartnerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RideFragment extends Fragment {
+public class WaitForPartnerFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -25,7 +24,7 @@ public class RideFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public RideFragment() {
+    public WaitForPartnerFragment() {
         // Required empty public constructor
     }
 
@@ -35,11 +34,11 @@ public class RideFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment RideFragment.
+     * @return A new instance of fragment WaitForPartnerFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RideFragment newInstance(String param1, String param2) {
-        RideFragment fragment = new RideFragment();
+    public static WaitForPartnerFragment newInstance(String param1, String param2) {
+        WaitForPartnerFragment fragment = new WaitForPartnerFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -48,21 +47,18 @@ public class RideFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam2 = getArguments().getString(ARG_PARAM2);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ride, container, false);
-
-        Button goToHistoryButton = view.findViewById(R.id.searchRideButton);
-        goToHistoryButton.setOnClickListener(v -> {
-            // Replace RideFragment with HistoryFragment
-            getParentFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragmentContainerView, new AvailableRideFragments()) // Use your container ID
-                    .addToBackStack(null) // Optional: adds to back stack so user can go back
-                    .commit();
-        });
-
-        return view;
-    } // onCreateView
-
-} // rideFragment
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_wait_for_partner, container, false);
+    }
+}
