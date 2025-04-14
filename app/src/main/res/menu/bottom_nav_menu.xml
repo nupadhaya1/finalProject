@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_driver"
+        android:icon="@drawable/driver"
+        android:title="Ride" />
+
+    <item
+        android:id="@+id/nav_customer"
+        android:icon="@drawable/customer"
+        android:title="Drive" />
+
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/profile"
+        android:title="Profile" />
+
+    <item
+        android:id="@+id/nav_chart"
+        android:icon="@drawable/chart"
+        android:title="History" />
+
+    <item
+        android:id="@+id/nav_about"
+        android:icon="@drawable/about"
+        android:title="About" />
+
+</menu>
