@@ -52,7 +52,7 @@ public class RideFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ride, container, false);
 
-        Button goToHistoryButton = view.findViewById(R.id.searchRideButton);
+        Button goToHistoryButton = view.findViewById(R.id.requestRideButton);
         goToHistoryButton.setOnClickListener(v -> {
             // Replace RideFragment with HistoryFragment
             getParentFragmentManager()

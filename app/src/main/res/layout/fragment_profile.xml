@@ -5,7 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".ProfileFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -17,5 +21,7 @@
             android:gravity="center"
             android:text="This is the profile fragment" />
     </LinearLayout>
+
+    </ScrollView>
 
 </FrameLayout>

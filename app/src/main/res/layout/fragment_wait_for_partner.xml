@@ -5,7 +5,11 @@
     android:layout_height="match_parent"
     tools:context=".WaitForPartnerFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -13,4 +17,5 @@
         android:gravity="center"
         android:text="Waiting for Confirmation" />
 
+    </ScrollView>
 </FrameLayout>

@@ -6,6 +6,12 @@
     android:background="#BA0C2F"
     tools:context=".RideFragment" >
 
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,10 +22,37 @@
             android:layout_width="match_parent"
             android:layout_height="237dp"
             android:gravity="center"
-            android:text="Find A Driver"
+            android:text="Request A Ride"
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold" />
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/Date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="25dp"
+                android:text="Date:"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/dateInput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="55dp"
+                android:background="@color/white"
+                android:ems="10"
+                android:hint=" MM/DD/YY"
+                android:textColor="@color/black" />
+        </TableRow>
 
         <TableRow
             android:layout_width="match_parent"
@@ -37,7 +70,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/fromInput"
+                android:id="@+id/fromInputDriver"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -45,7 +78,6 @@
                 android:background="@color/white"
                 android:ems="10"
                 android:hint=" Start Location"
-                android:inputType="textPassword"
                 android:textColor="@color/black" />
         </TableRow>
 
@@ -65,15 +97,14 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/editTextTextPassword4"
+                android:id="@+id/toDriverInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginLeft="75dp"
                 android:background="@color/white"
                 android:ems="10"
-                android:hint=" Desired Location"
-                android:inputType="textPassword" />
+                android:hint=" Desired Location" />
 
         </TableRow>
 
@@ -93,7 +124,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/editTextText"
+                android:id="@+id/passengerDriverInput"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -106,14 +137,34 @@
         </TableRow>
 
         <Button
-            android:id="@+id/searchRideButton"
+            android:id="@+id/requestRideButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:backgroundTint="@color/white"
-            android:text="Search"
+            android:text="Request"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/alternate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="80dp"
+            android:gravity="center"
+            android:text="Alternatively"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/white"
+            android:text="Accept an Offer"
             android:textColor="@color/black" />
 
     </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>

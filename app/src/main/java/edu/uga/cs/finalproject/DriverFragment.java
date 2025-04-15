@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,7 +59,18 @@ public class DriverFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_driver, container, false);
-    }
+        View view = inflater.inflate(R.layout.fragment_driver, container, false);
+
+        Button goToHistoryButton = view.findViewById(R.id.offerRideButton);
+        goToHistoryButton.setOnClickListener(v -> {
+            // Replace RideFragment with HistoryFragment
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainerView, new AvailableRideFragments()) // Use your container ID
+                    .addToBackStack(null) // Optional: adds to back stack so user can go back
+                    .commit();
+        });
+
+        return view;
+    } // onCreateView
 }
