@@ -86,105 +86,6 @@
 
             </TableRow>
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/dateOfBirth"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
-                    android:text="Date of Birth:"
-                    android:textColor="@color/white"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:id="@+id/dateOfBirthInput"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@color/white"
-                    android:ems="10"
-                    android:hint=" MM/DD/YY"
-                    android:textColor="@color/black" />
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/phonenumber"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
-                    android:text="Phone:"
-                    android:textColor="@color/white"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:id="@+id/phoneNumberInput"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@color/white"
-                    android:ems="10"
-                    android:hint=" ##########"
-                    android:textColor="@color/black" />
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/ugaId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
-                    android:text="UGA ID:"
-                    android:textColor="@color/white"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:id="@+id/ugaIDInput"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@color/white"
-                    android:ems="10"
-                    android:hint=" #########"
-                    android:textColor="@color/black" />
-
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/major"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
-                    android:text="Major:"
-                    android:textColor="@color/white"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:id="@+id/MajorInput"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@color/white"
-                    android:ems="10"
-                    android:hint=" Major"
-                    android:textColor="@color/black" />
-
-            </TableRow>
 
             <TableRow
                 android:layout_width="match_parent"
@@ -209,30 +110,6 @@
                     android:hint=" email@gmail.com"
                     android:textColor="@color/black" />
 
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:id="@+id/username"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
-                    android:text="Username:"
-                    android:textColor="@color/white"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:id="@+id/usernameInput"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@color/white"
-                    android:ems="10"
-                    android:hint=" Username"
-                    android:inputType="text" />
             </TableRow>
 
             <TableRow

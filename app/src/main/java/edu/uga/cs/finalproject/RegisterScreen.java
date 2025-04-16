@@ -10,16 +10,24 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
 import android.widget.Toast;
 
-import java.text.ParseException;
+// Firebase imports
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.AuthResult;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnCompleteListener;
+import androidx.annotation.NonNull;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class RegisterScreen extends AppCompatActivity {
 
-
-
+    // Firebase instance
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,66 +41,39 @@ public class RegisterScreen extends AppCompatActivity {
             return insets;
         });
 
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+
         // User input
         EditText firstName = findViewById(R.id.firstNameInput);
         EditText lastName = findViewById(R.id.lastNameInput);
-        EditText dateOfBirth = findViewById(R.id.dateOfBirthInput);
-        EditText phone = findViewById(R.id.phoneNumberInput);
-        EditText ugaID = findViewById(R.id.ugaIDInput);
-        EditText major = findViewById(R.id.MajorInput);
         EditText emailInput = findViewById(R.id.emailInput);
-        EditText usernameInput = findViewById(R.id.usernameInput);
         EditText passwordFirst = findViewById(R.id.passwordInput);
         EditText passwordConfirm = findViewById(R.id.passwordConfirmInput);
-
 
         // button lister for register
         Button registerButton = findViewById(R.id.registerEscape);
         registerButton.setOnClickListener(v -> {
 
-            // check the user input if it is valid Probably add firebase logic for passwords HERE ****************************
+            // check the user input if it is valid Probably add firebase logic for passwords
+            // HERE ****************************
 
             String first = firstName.getText().toString().trim();
             String last = lastName.getText().toString().trim();
-            String dob = dateOfBirth.getText().toString().trim();
-            String phoneNumber = phone.getText().toString().trim();
-            String ugaIDNum = ugaID.getText().toString().trim();
-            String majorInput = major.getText().toString().trim();
             String emailString = emailInput.getText().toString().trim();
-            String user = usernameInput.getText().toString().trim();
             String pass = passwordFirst.getText().toString().trim();
             String confirm = passwordConfirm.getText().toString().trim();
-
 
             // Check that birthdate is valid and not in the future
             SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
             sdf.setLenient(false); // Strict format checking
 
-            // check date of birth
-            try {
-                Date birthDate = sdf.parse(dob);
-                Date today = new Date();
-
-                if (birthDate.after(today)) {
-                    Toast.makeText(this, "Birthdate cannot be in the future", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            } catch (ParseException e) {
-                Toast.makeText(this, "Please enter a valid birthdate (MM/DD/YY)", Toast.LENGTH_SHORT).show();
-                return;
-            } // checl date of birth
-
-
             // Check for empty fields
-            if (first.isEmpty() || last.isEmpty() || dob.isEmpty() || phoneNumber.isEmpty() ||
-                    ugaIDNum.isEmpty() || majorInput.isEmpty() ||
-                    emailString.isEmpty() || user.isEmpty() ||
+            if (first.isEmpty() || last.isEmpty() || emailString.isEmpty() ||
                     pass.isEmpty() || confirm.isEmpty()) {
                 Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 return;
             } // if statement
-
-
 
             // Check that first and last names contain only letters
             if (!first.matches("[a-zA-Z]+") || !last.matches("[a-zA-Z]+")) {
@@ -110,7 +91,7 @@ public class RegisterScreen extends AppCompatActivity {
             if (!pass.equals(confirm)) {
                 Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
                 return;
-            }  // if statement
+            } // if statement
 
             // Check password length
             if (pass.length() < 6) {
@@ -118,15 +99,47 @@ public class RegisterScreen extends AppCompatActivity {
                 return;
             } // if statement
 
-            // check the date format
-
-
-
-
-            Intent intent = new Intent(RegisterScreen.this, LogInScreen.class);
-            startActivity(intent);
-            Toast.makeText(this, "Registered successfully!", Toast.LENGTH_SHORT).show();
-            finish();
+            // [START create user with email]
+            mAuth.createUserWithEmailAndPassword(emailString, pass)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Toast.makeText(RegisterScreen.this, "Registration Successful.",
+                                        Toast.LENGTH_SHORT).show();
+                                // Redirect to Login screen
+                                Intent intent = new Intent(RegisterScreen.this, LogInScreen.class);
+                                startActivity(intent);
+                                finish(); // Close the register activity
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                try {
+                                    throw task.getException();
+                                } catch (FirebaseAuthException e) {
+                                    // Handle specific Firebase Authentication errors
+                                    String errorCode = e.getErrorCode();
+                                    if ("ERROR_EMAIL_ALREADY_IN_USE".equals(errorCode)) {
+                                        Toast.makeText(RegisterScreen.this, "Email address is already in use.",
+                                                Toast.LENGTH_SHORT).show();
+                                    } else if ("ERROR_WEAK_PASSWORD".equals(errorCode)) {
+                                        Toast.makeText(RegisterScreen.this, "The password is too weak.",
+                                                Toast.LENGTH_SHORT).show();
+                                    } else if ("ERROR_INVALID_EMAIL".equals(errorCode)) {
+                                        Toast.makeText(RegisterScreen.this, "The email address is invalid.",
+                                                Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Toast.makeText(RegisterScreen.this, "Registration failed: " + e.getMessage(),
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                } catch (Exception e) {
+                                    Toast.makeText(RegisterScreen.this, "Registration failed: " + e.getMessage(),
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        }
+                    });
+            // [END create user with email]
 
         }); // register listener
 
@@ -139,8 +152,6 @@ public class RegisterScreen extends AppCompatActivity {
             finish();
 
         }); // register listener
-
-
 
     } // onCreate
 
