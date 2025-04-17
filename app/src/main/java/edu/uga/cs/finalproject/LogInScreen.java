@@ -53,19 +53,19 @@ public class LogInScreen extends AppCompatActivity {
             String passwordText = passwordInput.getText().toString().trim();
 
             // COMMENTING OUT LOGIN FOR EASIER DEV/TESTING
-            // if (email.isEmpty() || passwordText.isEmpty()) {
-            // Toast.makeText(this, "Please enter both email and password",
-            // Toast.LENGTH_SHORT).show();
-            // return;
-            // }
+             if (email.isEmpty() || passwordText.isEmpty()) {
+             Toast.makeText(this, "Please enter both email and password",
+             Toast.LENGTH_SHORT).show();
+             return;
+             }
 
             // // Sign in with email and password
-            // signIn(email, passwordText);
+             signIn(email, passwordText);
 
             // Navigate to MainScreen
-            Intent intent = new Intent(LogInScreen.this, MainScreen.class);
-            startActivity(intent);
-            finish();
+//            Intent intent = new Intent(LogInScreen.this, MainScreen.class);
+//            startActivity(intent);
+//            finish();
         });
 
         registerButton.setOnClickListener(v -> {
