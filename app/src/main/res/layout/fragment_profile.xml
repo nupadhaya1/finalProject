@@ -6,7 +6,6 @@
     tools:context=".ProfileFragment">
 
     <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -16,10 +15,32 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/userNameText"
             android:layout_width="match_parent"
-            android:layout_height="283dp"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textSize="18sp"
             android:gravity="center"
-            android:text="This is the profile fragment" />
+            android:padding="8dp" />
+
+        <TextView
+            android:id="@+id/userEmailText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:padding="8dp" />
+
+        <TextView
+            android:id="@+id/userPoints"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="999 Points"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:padding="8dp" />
+
     </LinearLayout>
 
     </ScrollView>

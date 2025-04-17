@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class MainScreen extends AppCompatActivity {
 
@@ -72,6 +73,7 @@ public class MainScreen extends AppCompatActivity {
 
         // This will take you into the login menu again
         if (item.getItemId() == R.id.action_logout) {
+            FirebaseAuth.getInstance().signOut(); // <-- This logs the user out of Firebase
             Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
 
             Intent intent = new Intent(this, LogInScreen.class);

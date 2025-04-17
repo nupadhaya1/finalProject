@@ -7,6 +7,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,7 +62,25 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+
+        TextView userNameText = view.findViewById(R.id.userNameText);
+        TextView userEmailText = view.findViewById(R.id.userEmailText);
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // Set email
+            userEmailText.setText("Email: " + user.getEmail());
+
+            // Set display name (if available)
+            String name = user.getDisplayName();
+            if (name != null && !name.isEmpty()) {
+                userNameText.setText("Name: " + name);
+            } else {
+                userNameText.setText("Name not set");
+            }
+        }
+
+        return view;
     }
 }
