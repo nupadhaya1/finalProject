@@ -71,6 +71,16 @@ public class DriverFragment extends Fragment {
                     .commit();
         });
 
+        Button acceptRideButton = view.findViewById(R.id.acceptRideButton);
+        acceptRideButton.setOnClickListener(v -> {
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainerView, new DriverAcceptRequestFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+
         return view;
     } // onCreateView
 }
