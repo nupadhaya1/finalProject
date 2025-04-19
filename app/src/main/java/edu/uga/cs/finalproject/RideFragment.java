@@ -65,19 +65,22 @@ public class RideFragment extends Fragment {
             RideRequest rideRequest = new RideRequest(currentDate, from, to, passengers);
             DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("rideRequests");
 
-            dbRef.push().setValue(rideRequest)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(getContext(), "Ride request posted!", Toast.LENGTH_SHORT).show();
+            String rideId = dbRef.push().getKey(); // generate unique ID
+            if (rideId != null) {
+                dbRef.child(rideId).setValue(rideRequest)
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(getContext(), "Ride request posted!", Toast.LENGTH_SHORT).show();
 
-                        // Navigate to waiting screen
-                        getParentFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.fragmentContainerView, new RideWaitForDriverFragment())
-                                .addToBackStack(null)
-                                .commit();
-                    })
-                    .addOnFailureListener(e ->
-                            Toast.makeText(getContext(), "Failed to post request", Toast.LENGTH_SHORT).show());
+                            // Navigate to waiting screen with rideId
+                            getParentFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.fragmentContainerView, RideWaitForDriverFragment.newInstance(rideId, rideRequest))
+                                    .addToBackStack(null)
+                                    .commit();
+                        })
+                        .addOnFailureListener(e ->
+                                Toast.makeText(getContext(), "Failed to post request", Toast.LENGTH_SHORT).show());
+            }
 
         });
 

@@ -49,15 +49,18 @@ public class LogInScreen extends AppCompatActivity {
 
         // Set up button listeners
         loginButton.setOnClickListener(v -> {
-            String email = usernameInput.getText().toString().trim();
-            String passwordText = passwordInput.getText().toString().trim();
+//            String email = usernameInput.getText().toString().trim();
+//            String passwordText = passwordInput.getText().toString().trim();
+
+            String email = "nupadhaya001@gmail.com";
+            String passwordText = "nu1234";
 
             // COMMENTING OUT LOGIN FOR EASIER DEV/TESTING
-             if (email.isEmpty() || passwordText.isEmpty()) {
-             Toast.makeText(this, "Please enter both email and password",
-             Toast.LENGTH_SHORT).show();
-             return;
-             }
+//             if (email.isEmpty() || passwordText.isEmpty()) {
+//             Toast.makeText(this, "Please enter both email and password",
+//             Toast.LENGTH_SHORT).show();
+//             return;
+//             }
 
             // // Sign in with email and password
              signIn(email, passwordText);

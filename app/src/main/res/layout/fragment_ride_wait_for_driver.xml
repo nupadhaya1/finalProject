@@ -5,17 +5,54 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Waiting for a driver to accept your request..."
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/dateText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="date"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/fromText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="from"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/toText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="to"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/passengersText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="passengers"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/rideIdText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ride id"
+            android:textColor="@android:color/holo_blue_dark"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/cancelRideRequest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="cancel request" />
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

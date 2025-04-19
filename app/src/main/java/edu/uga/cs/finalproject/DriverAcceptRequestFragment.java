@@ -33,8 +33,11 @@ public class DriverAcceptRequestFragment extends Fragment {
 
                 for (DataSnapshot rideSnap : snapshot.getChildren()) {
                     RideRequest ride = rideSnap.getValue(RideRequest.class);
+                    String requestId = rideSnap.getKey();
+
                     if (ride != null) {
-                        rideList.append("Date: ").append(ride.date)
+                        rideList.append("Request ID: ").append(requestId)
+                                .append("\nDate: ").append(ride.date)
                                 .append("\nFrom: ").append(ride.from)
                                 .append("\nTo: ").append(ride.to)
                                 .append("\nPassengers: ").append(ride.passengers)
