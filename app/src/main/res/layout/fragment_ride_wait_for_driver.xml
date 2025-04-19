@@ -47,6 +47,14 @@
             android:textColor="@android:color/holo_blue_dark"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/statusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ride status"
+            android:textColor="@android:color/holo_red_dark"
+            android:textStyle="bold" />
+
         <Button
             android:id="@+id/cancelRideRequest"
             android:layout_width="match_parent"

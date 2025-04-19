@@ -21,6 +21,8 @@ public class RideWaitForDriverFragment extends Fragment {
     private static final String ARG_PASSENGERS = "passengers";
     private static final String ARG_RIDE_ID = "rideId";
 
+    private static final String ARG_STATUS = "status";
+
     public RideWaitForDriverFragment() {
         // Required empty public constructor
     }
@@ -33,6 +35,7 @@ public class RideWaitForDriverFragment extends Fragment {
         args.putString(ARG_TO, rideRequest.to);
         args.putString(ARG_PASSENGERS, rideRequest.passengers);
         args.putString(ARG_RIDE_ID, rideId); // pass the ride ID
+        args.putString(ARG_STATUS, rideRequest.status);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,7 +50,9 @@ public class RideWaitForDriverFragment extends Fragment {
         TextView toText = view.findViewById(R.id.toText);
         TextView passengersText = view.findViewById(R.id.passengersText);
         TextView rideIdText = view.findViewById(R.id.rideIdText);
+        TextView statusText = view.findViewById(R.id.statusText);
         Button cancelButton = view.findViewById(R.id.cancelRideRequest);
+
 
         Bundle args = getArguments();
         if (args != null) {
@@ -56,12 +61,14 @@ public class RideWaitForDriverFragment extends Fragment {
             String to = args.getString(ARG_TO);
             String passengers = args.getString(ARG_PASSENGERS);
             String rideId = args.getString(ARG_RIDE_ID);
+            String status = args.getString(ARG_STATUS);
 
             dateText.setText("Date: " + date);
             fromText.setText("From: " + from);
             toText.setText("To: " + to);
             passengersText.setText("Passengers: " + passengers);
             rideIdText.setText("Request ID: " + rideId);
+            statusText.setText("Status: " + status);
 
             cancelButton.setOnClickListener(v -> {
                 DatabaseReference dbRef = FirebaseDatabase.getInstance()
