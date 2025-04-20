@@ -10,8 +10,11 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class RideWaitForDriverFragment extends Fragment {
 
@@ -20,8 +23,10 @@ public class RideWaitForDriverFragment extends Fragment {
     private static final String ARG_TO = "to";
     private static final String ARG_PASSENGERS = "passengers";
     private static final String ARG_RIDE_ID = "rideId";
-
     private static final String ARG_STATUS = "status";
+
+    private DatabaseReference rideRef;
+    private ValueEventListener statusListener;
 
     public RideWaitForDriverFragment() {
         // Required empty public constructor
@@ -34,7 +39,7 @@ public class RideWaitForDriverFragment extends Fragment {
         args.putString(ARG_FROM, rideRequest.from);
         args.putString(ARG_TO, rideRequest.to);
         args.putString(ARG_PASSENGERS, rideRequest.passengers);
-        args.putString(ARG_RIDE_ID, rideId); // pass the ride ID
+        args.putString(ARG_RIDE_ID, rideId);
         args.putString(ARG_STATUS, rideRequest.status);
         fragment.setArguments(args);
         return fragment;
@@ -53,7 +58,6 @@ public class RideWaitForDriverFragment extends Fragment {
         TextView statusText = view.findViewById(R.id.statusText);
         Button cancelButton = view.findViewById(R.id.cancelRideRequest);
 
-
         Bundle args = getArguments();
         if (args != null) {
             String date = args.getString(ARG_DATE);
@@ -61,25 +65,41 @@ public class RideWaitForDriverFragment extends Fragment {
             String to = args.getString(ARG_TO);
             String passengers = args.getString(ARG_PASSENGERS);
             String rideId = args.getString(ARG_RIDE_ID);
-            String status = args.getString(ARG_STATUS);
 
+            // Set initial values
             dateText.setText("Date: " + date);
             fromText.setText("From: " + from);
             toText.setText("To: " + to);
             passengersText.setText("Passengers: " + passengers);
             rideIdText.setText("Request ID: " + rideId);
-            statusText.setText("Status: " + status);
+
+            // Get reference to this specific ride request
+            rideRef = FirebaseDatabase.getInstance().getReference("rideRequests").child(rideId);
+
+            // Listen for status changes
+            statusListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    RideRequest updatedRide = snapshot.getValue(RideRequest.class);
+                    if (updatedRide != null) {
+                        statusText.setText("Status: " + updatedRide.status);
+                    } else {
+                        statusText.setText("Status: canceled or not found");
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    Toast.makeText(getContext(), "Error loading ride status", Toast.LENGTH_SHORT).show();
+                }
+            };
+
+            rideRef.addValueEventListener(statusListener);
 
             cancelButton.setOnClickListener(v -> {
-                DatabaseReference dbRef = FirebaseDatabase.getInstance()
-                        .getReference("rideRequests")
-                        .child(rideId);
-
-                dbRef.removeValue()
+                rideRef.removeValue()
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(getContext(), "Ride request canceled", Toast.LENGTH_SHORT).show();
-
-                            // Go back to previous screen or home
                             getParentFragmentManager().popBackStack();
                         })
                         .addOnFailureListener(e ->
@@ -90,4 +110,11 @@ public class RideWaitForDriverFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (rideRef != null && statusListener != null) {
+            rideRef.removeEventListener(statusListener);
+        }
+    }
 }
