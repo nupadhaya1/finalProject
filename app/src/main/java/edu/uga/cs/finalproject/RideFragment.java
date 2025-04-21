@@ -89,7 +89,7 @@ public class RideFragment extends Fragment {
         acceptOfferButton.setOnClickListener(v -> {
             getParentFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragmentContainerView, new AvailableRideFragments())
+                    .replace(R.id.fragmentContainerView, new RiderAcceptRequestFragment())
                     .addToBackStack(null)
                     .commit();
         });

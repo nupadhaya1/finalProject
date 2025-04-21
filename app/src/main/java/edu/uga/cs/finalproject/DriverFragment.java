@@ -8,7 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link DriverFragment#newInstance} factory method to
@@ -55,20 +65,47 @@ public class DriverFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_driver, container, false);
 
-        Button goToHistoryButton = view.findViewById(R.id.offerRideButton);
-        goToHistoryButton.setOnClickListener(v -> {
-            // Replace RideFragment with HistoryFragment
-            getParentFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragmentContainerView, new AvailableRideFragments()) // Use your container ID
-                    .addToBackStack(null) // Optional: adds to back stack so user can go back
-                    .commit();
+        EditText fromInput = view.findViewById(R.id.fromInputDriver);
+        EditText toInput = view.findViewById(R.id.toDriverInput);
+        EditText passengerInput = view.findViewById(R.id.passengerDriverInput);
+
+        String currentDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
+
+        Button offerRideButton = view.findViewById(R.id.offerRideButton);
+        offerRideButton.setOnClickListener(v -> {
+            String from = fromInput.getText().toString().trim();
+            String to = toInput.getText().toString().trim();
+            String passengers = passengerInput.getText().toString().trim();
+
+            if (from.isEmpty() || to.isEmpty() || passengers.isEmpty()) {
+                Toast.makeText(getContext(), "Please fill out all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            RideRequest rideRequest = new RideRequest(currentDate, from, to, passengers);
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("driveOffers"); // <- Use different node if needed
+
+            String rideId = dbRef.push().getKey();
+            if (rideId != null) {
+                dbRef.child(rideId).setValue(rideRequest)
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(getContext(), "Ride offer posted!", Toast.LENGTH_SHORT).show();
+
+                            // Navigate to waiting screen with rideId
+                            getParentFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.fragmentContainerView, DriveWaitforRiderFragment.newInstance(rideId, rideRequest))
+                                    .addToBackStack(null)
+                                    .commit();
+                        })
+                        .addOnFailureListener(e ->
+                                Toast.makeText(getContext(), "Failed to post ride offer", Toast.LENGTH_SHORT).show());
+            }
         });
 
         Button acceptRideButton = view.findViewById(R.id.acceptRideButton);
@@ -80,7 +117,7 @@ public class DriverFragment extends Fragment {
                     .commit();
         });
 
-
         return view;
-    } // onCreateView
+    }
+
 }

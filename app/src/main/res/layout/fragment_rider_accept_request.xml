@@ -1,8 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#BA0C2F">
+    android:background="#BA0C2F"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +20,7 @@
             android:textStyle="bold"
             android:textSize="24sp"
             android:gravity="center"
-            android:text="Give someone a ride"
+            android:text="Ride with someone!"
             android:layout_gravity="center_horizontal"
             android:paddingBottom="16dp" />
 
@@ -28,10 +30,11 @@
             android:layout_weight="1">
 
             <LinearLayout
-                android:id="@+id/driverRequestListLayout"
+                android:id="@+id/riderRequestListLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" />
         </ScrollView>
     </LinearLayout>
+
 </FrameLayout>

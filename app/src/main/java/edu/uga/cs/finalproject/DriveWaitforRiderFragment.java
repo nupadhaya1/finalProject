@@ -16,7 +16,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-public class RideWaitForDriverFragment extends Fragment {
+public class DriveWaitforRiderFragment extends Fragment {
 
     private static final String ARG_DATE = "date";
     private static final String ARG_FROM = "from";
@@ -28,12 +28,10 @@ public class RideWaitForDriverFragment extends Fragment {
     private DatabaseReference rideRef;
     private ValueEventListener statusListener;
 
-    public RideWaitForDriverFragment() {
-        // Required empty public constructor
-    }
+    public DriveWaitforRiderFragment() {}
 
-    public static RideWaitForDriverFragment newInstance(String rideId, RideRequest rideRequest) {
-        RideWaitForDriverFragment fragment = new RideWaitForDriverFragment();
+    public static DriveWaitforRiderFragment newInstance(String rideId, RideRequest rideRequest) {
+        DriveWaitforRiderFragment fragment = new DriveWaitforRiderFragment();
         Bundle args = new Bundle();
         args.putString(ARG_DATE, rideRequest.date);
         args.putString(ARG_FROM, rideRequest.from);
@@ -46,9 +44,8 @@ public class RideWaitForDriverFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_ride_wait_for_driver, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_drive_wait_for_rider, container, false);
 
         TextView dateText = view.findViewById(R.id.dateText);
         TextView fromText = view.findViewById(R.id.fromText);
@@ -66,17 +63,14 @@ public class RideWaitForDriverFragment extends Fragment {
             String passengers = args.getString(ARG_PASSENGERS);
             String rideId = args.getString(ARG_RIDE_ID);
 
-            // Set initial values
             dateText.setText("Date: " + date);
             fromText.setText("From: " + from);
             toText.setText("To: " + to);
             passengersText.setText("Passengers: " + passengers);
             rideIdText.setText("Request ID: " + rideId);
 
-            // Get reference to this specific ride request
-            rideRef = FirebaseDatabase.getInstance().getReference("rideRequests").child(rideId);
+            rideRef = FirebaseDatabase.getInstance().getReference("driveOffers").child(rideId);
 
-            // Listen for status changes
             statusListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
@@ -91,6 +85,7 @@ public class RideWaitForDriverFragment extends Fragment {
                                     .addToBackStack(null)
                                     .commit();
                         }
+
                     } else {
                         statusText.setText("Status: canceled or not found");
                     }
@@ -108,11 +103,11 @@ public class RideWaitForDriverFragment extends Fragment {
             cancelButton.setOnClickListener(v -> {
                 rideRef.removeValue()
                         .addOnSuccessListener(aVoid -> {
-                            Toast.makeText(getContext(), "Ride request canceled", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Ride offer canceled", Toast.LENGTH_SHORT).show();
                             getParentFragmentManager().popBackStack();
                         })
                         .addOnFailureListener(e ->
-                                Toast.makeText(getContext(), "Failed to cancel request", Toast.LENGTH_SHORT).show());
+                                Toast.makeText(getContext(), "Failed to cancel ride offer", Toast.LENGTH_SHORT).show());
             });
         }
 
