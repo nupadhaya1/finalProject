@@ -59,7 +59,8 @@
             android:id="@+id/cancelRideRequest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="cancel request" />
+            android:text="Cancel Request"
+            android:backgroundTint="#BA0C2F"/>
     </LinearLayout>
 
 

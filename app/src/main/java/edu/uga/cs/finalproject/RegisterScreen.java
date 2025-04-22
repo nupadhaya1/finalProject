@@ -104,6 +104,7 @@ public class RegisterScreen extends AppCompatActivity {
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
+                            // if the creation of the user account it successful
                             if (task.isSuccessful()) {
                                 // Sign in success, update UI with the signed-in user's information
                                 Toast.makeText(RegisterScreen.this, "Registration Successful.",
@@ -138,7 +139,7 @@ public class RegisterScreen extends AppCompatActivity {
                                                 finish(); // Close the register activity
                                             }
                                         });
-
+                            // if the creation of the user account fails
                             } else {
                                 // If sign in fails, display a message to the user.
                                 try {

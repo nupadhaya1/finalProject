@@ -16,9 +16,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link DriverFragment#newInstance} factory method to
@@ -76,7 +75,7 @@ public class DriverFragment extends Fragment {
 
         String currentDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
 
-        Button offerRideButton = view.findViewById(R.id.offerRideButton);
+        Button offerRideButton = view.findViewById(R.id.updateOfferButtonFinal);
         offerRideButton.setOnClickListener(v -> {
             String from = fromInput.getText().toString().trim();
             String to = toInput.getText().toString().trim();
@@ -116,6 +115,16 @@ public class DriverFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
         });
+
+        Button updateoffer = view.findViewById(R.id.updateOfferButton);
+        updateoffer.setOnClickListener(v -> {
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainerView, new UpdateDriverOffer())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
 
         return view;
     }

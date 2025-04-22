@@ -94,6 +94,16 @@ public class RideFragment extends Fragment {
                     .commit();
         });
 
+        // Optional: Update A Unaccepcted Ride Request
+        Button updateButton = view.findViewById(R.id.updateRequestButton);
+        updateButton.setOnClickListener(v -> {
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainerView, new UpdateRideRequest())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
         return view;
     }
 }

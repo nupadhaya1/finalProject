@@ -7,7 +7,6 @@
     tools:context=".DriverFragment">
 
     <ScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
@@ -110,7 +109,7 @@
         </TableRow>
 
         <Button
-            android:id="@+id/offerRideButton"
+            android:id="@+id/updateOfferButtonFinal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -135,6 +134,16 @@
             android:layout_gravity="center"
             android:backgroundTint="@color/white"
             android:text="Accept A Request"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/updateOfferButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="15dp"
+            android:backgroundTint="@color/white"
+            android:text="Update Offer"
             android:textColor="@color/black" />
 
     </LinearLayout>

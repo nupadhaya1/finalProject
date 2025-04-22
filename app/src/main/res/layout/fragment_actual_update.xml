@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#BA0C2F"
-    tools:context=".RideFragment" >
+    tools:context=".ActualUpdateFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -14,7 +13,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:backgroundTint="@color/white"
+            android:background="#BA0C2F"
             android:orientation="vertical">
 
             <TextView
@@ -22,7 +21,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="188dp"
                 android:gravity="center"
-                android:text="Request A Ride"
+                android:text="Update Ride"
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -43,7 +42,7 @@
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/fromInputDriver"
+                    android:id="@+id/fromInputDriverUpdated"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -70,7 +69,7 @@
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/toDriverInput"
+                    android:id="@+id/toDriverInputUpdated"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -98,7 +97,7 @@
                     android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/passengerDriverInput"
+                    android:id="@+id/passengerDriverInputUpdated"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -111,42 +110,13 @@
             </TableRow>
 
             <Button
-                android:id="@+id/requestRideButton"
+                android:id="@+id/actualUpdateButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:backgroundTint="@color/white"
-                android:text="Request"
+                android:text="Update"
                 android:textColor="@color/black" />
-
-            <TextView
-                android:id="@+id/alternate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="80dp"
-                android:gravity="center"
-                android:text="Alternatively"
-                android:textColor="@color/white" />
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:backgroundTint="@color/white"
-                android:text="Accept an Offer"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/updateRequestButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:backgroundTint="@color/white"
-                android:textColor="@color/black"
-                android:text="Update a Request"
-                android:layout_marginTop="15dp"/>
 
 
         </LinearLayout>
