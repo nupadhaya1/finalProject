@@ -5,9 +5,10 @@ public class DriverOffer {
     public String from;
     public String to;
     public String passengers;
-    public String status; // Default to "unaccepted"
+    public String status;
 
     public DriverOffer() {
+        // Default constructor required for calls to DataSnapshot.getValue(RideRequest.class)
 
     }
 

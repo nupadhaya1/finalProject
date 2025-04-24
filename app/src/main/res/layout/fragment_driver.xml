@@ -113,6 +113,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="15dp"
             android:backgroundTint="@color/white"
             android:text="Offer"
             android:textColor="@color/black" />
@@ -122,16 +123,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="15dp"
             android:gravity="center"
             android:text="Alternatively"
             android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/yourOffersButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:backgroundTint="@color/white"
+            android:text="Your Offers"
+            android:textColor="@color/black" />
 
         <Button
             android:id="@+id/acceptRideButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="5dp"
             android:backgroundTint="@color/white"
             android:text="Accept A Request"
             android:textColor="@color/black" />
@@ -141,7 +153,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:backgroundTint="@color/white"
             android:text="Update Offer"
             android:textColor="@color/black" />

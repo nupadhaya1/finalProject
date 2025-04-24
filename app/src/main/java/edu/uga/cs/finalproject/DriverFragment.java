@@ -86,25 +86,34 @@ public class DriverFragment extends Fragment {
                 return;
             }
 
-            RideRequest rideRequest = new RideRequest(currentDate, from, to, passengers);
-            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("driveOffers"); // <- Use different node if needed
+            DriverOffer offer = new DriverOffer(currentDate, from, to, passengers);
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("driveOffers");
 
-            String rideId = dbRef.push().getKey();
-            if (rideId != null) {
-                dbRef.child(rideId).setValue(rideRequest)
+            String offerId = dbRef.push().getKey();
+            if (offerId != null) {
+                dbRef.child(offerId).setValue(offer)
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(getContext(), "Ride offer posted!", Toast.LENGTH_SHORT).show();
 
-                            // Navigate to waiting screen with rideId
+                            // Navigate to waiting screen with offerId
                             getParentFragmentManager()
                                     .beginTransaction()
-                                    .replace(R.id.fragmentContainerView, DriveWaitforRiderFragment.newInstance(rideId, rideRequest))
+                                    .replace(R.id.fragmentContainerView, DriveWaitforRiderFragment.newInstance(offerId, offer))
                                     .addToBackStack(null)
                                     .commit();
                         })
                         .addOnFailureListener(e ->
                                 Toast.makeText(getContext(), "Failed to post ride offer", Toast.LENGTH_SHORT).show());
             }
+        });
+
+        Button yourOffers = view.findViewById(R.id.yourOffersButton);
+        yourOffers.setOnClickListener(v -> {
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainerView, new UserOffersFragment())
+                    .addToBackStack(null)
+                    .commit();
         });
 
         Button acceptRideButton = view.findViewById(R.id.acceptRideButton);

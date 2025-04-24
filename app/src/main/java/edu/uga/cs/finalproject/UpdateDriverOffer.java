@@ -24,9 +24,9 @@ public class UpdateDriverOffer extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_driver_accept_request, container, false);
+        View view = inflater.inflate(R.layout.fragment_update_driver_offer, container, false);
         LinearLayout requestListLayout = view.findViewById(R.id.driverOfferListLayout);
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("rideRequests");
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("driveOffers");
 
         dbRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -34,10 +34,10 @@ public class UpdateDriverOffer extends Fragment {
                 requestListLayout.removeAllViews();
 
                 for (DataSnapshot rideSnap : snapshot.getChildren()) {
-                    RideRequest ride = rideSnap.getValue(RideRequest.class);
-                    String requestId = rideSnap.getKey();
+                    DriverOffer offer = rideSnap.getValue(DriverOffer.class);
+                    String offerId = rideSnap.getKey();
 
-                    if (ride != null && ride.status != null && ride.status.equalsIgnoreCase("unaccepted")) {
+                    if (offer != null && offer.status != null && offer.status.equalsIgnoreCase("unaccepted")) {
                         LinearLayout rideItemLayout = new LinearLayout(getContext());
                         rideItemLayout.setOrientation(LinearLayout.VERTICAL);
                         rideItemLayout.setPadding(16, 16, 16, 16);
@@ -45,18 +45,18 @@ public class UpdateDriverOffer extends Fragment {
                         TextView rideDetails = new TextView(getContext());
                         rideDetails.setTextColor(getResources().getColor(android.R.color.white));
                         rideDetails.setText(
-                                "Request ID: " + requestId +
-                                        "\nDate: " + ride.date +
-                                        "\nFrom: " + ride.from +
-                                        "\nTo: " + ride.to +
-                                        "\nPassengers: " + ride.passengers +
-                                        "\nStatus: " + ride.status);
+                                "Request ID: " + offerId +
+                                        "\nDate: " + offer.date +
+                                        "\nFrom: " + offer.from +
+                                        "\nTo: " + offer.to +
+                                        "\nPassengers: " + offer.passengers +
+                                        "\nStatus: " + offer.status);
 
                         rideItemLayout.addView(rideDetails);
 
                         rideItemLayout.setOnClickListener(v -> {
                             Bundle bundle = new Bundle();
-                            bundle.putString("requestId", requestId);
+                            bundle.putString("offerId", offerId);
 
                             ActualUpdateOfferFragment fragment = new ActualUpdateOfferFragment();
                             fragment.setArguments(bundle);

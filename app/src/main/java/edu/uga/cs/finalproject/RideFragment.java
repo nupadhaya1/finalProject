@@ -85,6 +85,16 @@ public class RideFragment extends Fragment {
         });
 
         // Optional: Navigation to available rides
+        Button yourRequests= view.findViewById(R.id.yourRequestButton);
+        yourRequests.setOnClickListener(v -> {
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainerView, new UserRequestsFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        // Optional: Navigation to available rides
         Button acceptOfferButton = view.findViewById(R.id.button2);
         acceptOfferButton.setOnClickListener(v -> {
             getParentFragmentManager()
@@ -102,6 +112,7 @@ public class RideFragment extends Fragment {
                     .replace(R.id.fragmentContainerView, new UpdateRideRequest())
                     .addToBackStack(null)
                     .commit();
+            Toast.makeText(getContext(), "Update Ride Request Page!", Toast.LENGTH_SHORT).show();
         });
 
         return view;

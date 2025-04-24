@@ -19,7 +19,7 @@
             android:layout_gravity="center_horizontal"
             android:gravity="center"
             android:paddingBottom="16dp"
-            android:text="Update a Ride"
+            android:text="Update a Ride Request"
             android:textColor="@android:color/white"
             android:textSize="24sp"
             android:textStyle="bold" />

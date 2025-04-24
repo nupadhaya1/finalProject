@@ -67,7 +67,7 @@ public class ActualUpdateFragment extends Fragment {
             dbRef.child("passengers").setValue(passengerInput.getText().toString());
 
             Toast.makeText(getContext(), "Ride updated successfully!", Toast.LENGTH_SHORT).show();
-            getParentFragmentManager()
+            requireActivity().getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragmentContainerView, new RideFragment())
                     .addToBackStack(null)

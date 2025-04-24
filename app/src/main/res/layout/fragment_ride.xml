@@ -115,6 +115,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="15dp"
                 android:backgroundTint="@color/white"
                 android:text="Request"
                 android:textColor="@color/black" />
@@ -124,16 +125,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="80dp"
+                android:layout_marginTop="15dp"
                 android:gravity="center"
                 android:text="Alternatively"
                 android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/yourRequestButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:backgroundTint="@color/white"
+                android:text="Your Requests"
+                android:textColor="@color/black" />
 
             <Button
                 android:id="@+id/button2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="5dp"
                 android:backgroundTint="@color/white"
                 android:text="Accept an Offer"
                 android:textColor="@color/black" />
@@ -143,10 +155,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="5dp"
                 android:backgroundTint="@color/white"
-                android:textColor="@color/black"
                 android:text="Update a Request"
-                android:layout_marginTop="15dp"/>
+                android:textColor="@color/black" />
 
 
         </LinearLayout>

@@ -30,15 +30,15 @@ public class DriveWaitforRiderFragment extends Fragment {
 
     public DriveWaitforRiderFragment() {}
 
-    public static DriveWaitforRiderFragment newInstance(String rideId, RideRequest rideRequest) {
+    public static DriveWaitforRiderFragment newInstance(String offer, DriverOffer driverOffer) {
         DriveWaitforRiderFragment fragment = new DriveWaitforRiderFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_DATE, rideRequest.date);
-        args.putString(ARG_FROM, rideRequest.from);
-        args.putString(ARG_TO, rideRequest.to);
-        args.putString(ARG_PASSENGERS, rideRequest.passengers);
-        args.putString(ARG_RIDE_ID, rideId);
-        args.putString(ARG_STATUS, rideRequest.status);
+        args.putString(ARG_DATE, driverOffer.date);
+        args.putString(ARG_FROM, driverOffer.from);
+        args.putString(ARG_TO, driverOffer.to);
+        args.putString(ARG_PASSENGERS, driverOffer.passengers);
+        args.putString(ARG_RIDE_ID, offer);
+        args.putString(ARG_STATUS, driverOffer.status);
         fragment.setArguments(args);
         return fragment;
     }

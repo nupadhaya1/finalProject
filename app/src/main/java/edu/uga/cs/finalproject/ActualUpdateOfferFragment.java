@@ -17,7 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ActualUpdateOfferFragment extends Fragment {
 
-    private String requestId;
+    private String offerId;
     private EditText fromInput, toInput, passengerInput;
     private DatabaseReference dbRef;
 
@@ -29,7 +29,7 @@ public class ActualUpdateOfferFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            requestId = getArguments().getString("requestId");
+            offerId = getArguments().getString("offerId");
         }
     }
 
@@ -43,22 +43,22 @@ public class ActualUpdateOfferFragment extends Fragment {
         passengerInput = view.findViewById(R.id.passengerDriverInput);
         Button updateButton = view.findViewById(R.id.updateOfferButtonFinal);
 
-        if (requestId == null) {
-            Toast.makeText(getContext(), "No ride ID provided", Toast.LENGTH_SHORT).show();
+        if (offerId == null) {
+            Toast.makeText(getContext(), "No offer ID provided", Toast.LENGTH_SHORT).show();
             return view;
         }
 
-        dbRef = FirebaseDatabase.getInstance().getReference("rideRequests").child(requestId);
+        dbRef = FirebaseDatabase.getInstance().getReference("driveOffers").child(offerId);
 
         // Load existing ride data
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                RideRequest ride = snapshot.getValue(RideRequest.class);
-                if (ride != null) {
-                    fromInput.setText(ride.from);
-                    toInput.setText(ride.to);
-                    passengerInput.setText(ride.passengers);
+                 DriverOffer offer = snapshot.getValue(DriverOffer.class);
+                if (offer != null) {
+                    fromInput.setText(offer.from);
+                    toInput.setText(offer.to);
+                    passengerInput.setText(offer.passengers);
                 }
             }
 
