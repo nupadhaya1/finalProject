@@ -28,7 +28,8 @@ public class DriveWaitforRiderFragment extends Fragment {
     private DatabaseReference rideRef;
     private ValueEventListener statusListener;
 
-    public DriveWaitforRiderFragment() {}
+    public DriveWaitforRiderFragment() {
+    }
 
     public static DriveWaitforRiderFragment newInstance(String offer, DriverOffer driverOffer) {
         DriveWaitforRiderFragment fragment = new DriveWaitforRiderFragment();
@@ -79,7 +80,11 @@ public class DriveWaitforRiderFragment extends Fragment {
                         statusText.setText("Status: " + updatedRide.status);
 
                         if ("accepted".equalsIgnoreCase(updatedRide.status)) {
-                            Fragment activeTripFragment = new ActiveTripFragment();
+                            Fragment activeTripFragment = new ActiveTripDriver();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("rideId", rideId); // Pass rideId so the next fragment knows
+                            activeTripFragment.setArguments(bundle);
+
                             getParentFragmentManager().beginTransaction()
                                     .replace(R.id.fragmentContainerView, activeTripFragment)
                                     .addToBackStack(null)
@@ -106,8 +111,8 @@ public class DriveWaitforRiderFragment extends Fragment {
                             Toast.makeText(getContext(), "Ride offer canceled", Toast.LENGTH_SHORT).show();
                             getParentFragmentManager().popBackStack();
                         })
-                        .addOnFailureListener(e ->
-                                Toast.makeText(getContext(), "Failed to cancel ride offer", Toast.LENGTH_SHORT).show());
+                        .addOnFailureListener(e -> Toast
+                                .makeText(getContext(), "Failed to cancel ride offer", Toast.LENGTH_SHORT).show());
             });
         }
 

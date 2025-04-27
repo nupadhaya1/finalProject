@@ -24,7 +24,7 @@ public class RiderAcceptRequestFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_rider_accept_request, container, false);
 
         LinearLayout requestListLayout = view.findViewById(R.id.riderRequestListLayout);
@@ -63,13 +63,16 @@ public class RiderAcceptRequestFragment extends Fragment {
                             dbRef.child(offerId).child("status").setValue("accepted");
                             Toast.makeText(getContext(), "Ride offer accepted!", Toast.LENGTH_SHORT).show();
 
-                            Fragment activeTripFragment = new ActiveTripFragment();
+                            Fragment activeTripFragment = new ActiveTripRider();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("rideId", offerId);
+                            activeTripFragment.setArguments(bundle);
+
                             getParentFragmentManager().beginTransaction()
                                     .replace(R.id.fragmentContainerView, activeTripFragment)
                                     .addToBackStack(null)
                                     .commit();
                         });
-
 
                         // Add divider
                         View divider = new View(getContext());
@@ -80,7 +83,6 @@ public class RiderAcceptRequestFragment extends Fragment {
                         divider.setBackgroundColor(getResources().getColor(android.R.color.white));
 
                         requestListLayout.addView(divider);
-
 
                         // Add views
                         rideItemLayout.addView(rideDetails);

@@ -24,7 +24,7 @@ public class DriverAcceptRequestFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_driver_accept_request, container, false);
 
         LinearLayout requestListLayout = view.findViewById(R.id.driverOfferListLayout);
@@ -36,7 +36,7 @@ public class DriverAcceptRequestFragment extends Fragment {
                 requestListLayout.removeAllViews(); // Clear previous views
 
                 for (DataSnapshot rideSnap : snapshot.getChildren()) {
-                    RideRequest ride = rideSnap.getValue(RideRequest.class);
+                    DriverOffer ride = rideSnap.getValue(DriverOffer.class);
                     String requestId = rideSnap.getKey();
 
                     if (ride != null && "unaccepted".equalsIgnoreCase(ride.status)) {
@@ -60,16 +60,24 @@ public class DriverAcceptRequestFragment extends Fragment {
                         Button acceptButton = new Button(getContext());
                         acceptButton.setText("Accept Ride");
                         acceptButton.setOnClickListener(v -> {
-                            dbRef.child(requestId).child("status").setValue("accepted");
-                            Toast.makeText(getContext(), "Ride accepted!", Toast.LENGTH_SHORT).show();
+                            dbRef.child(requestId).child("status").setValue("accepted")
+                                    .addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(getContext(), "Ride offer accepted!", Toast.LENGTH_SHORT).show();
 
-                            Fragment activeTripFragment = new ActiveTripFragment();
-                            getParentFragmentManager().beginTransaction()
-                                    .replace(R.id.fragmentContainerView, activeTripFragment)
-                                    .addToBackStack(null)
-                                    .commit();
+                                        Fragment activeTripFragment = new ActiveTripDriver();
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("rideId", requestId); // pass rideId
+                                        activeTripFragment.setArguments(bundle);
+
+                                        getParentFragmentManager().beginTransaction()
+                                                .replace(R.id.fragmentContainerView, activeTripFragment)
+                                                .addToBackStack(null)
+                                                .commit();
+                                    })
+                                    .addOnFailureListener(e -> Toast
+                                            .makeText(getContext(), "Failed to accept ride offer", Toast.LENGTH_SHORT)
+                                            .show());
                         });
-
 
                         // Add divider
                         View divider = new View(getContext());
@@ -80,7 +88,6 @@ public class DriverAcceptRequestFragment extends Fragment {
                         divider.setBackgroundColor(getResources().getColor(android.R.color.white));
 
                         requestListLayout.addView(divider);
-
 
                         // Add views
                         rideItemLayout.addView(rideDetails);

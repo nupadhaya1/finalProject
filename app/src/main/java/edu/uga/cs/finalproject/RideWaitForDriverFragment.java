@@ -85,12 +85,17 @@ public class RideWaitForDriverFragment extends Fragment {
                         statusText.setText("Status: " + updatedRide.status);
 
                         if ("accepted".equalsIgnoreCase(updatedRide.status)) {
-                            Fragment activeTripFragment = new ActiveTripFragment();
+                            Fragment activeTripRider = new ActiveTripRider();
+                            Bundle bundle = new Bundle();
+                            bundle.putString("rideId", rideId);  // <-- pass rideId
+                            activeTripRider.setArguments(bundle);
+
                             getParentFragmentManager().beginTransaction()
-                                    .replace(R.id.fragmentContainerView, activeTripFragment)
+                                    .replace(R.id.fragmentContainerView, activeTripRider)
                                     .addToBackStack(null)
                                     .commit();
                         }
+
                     } else {
                         statusText.setText("Status: canceled or not found");
                     }
