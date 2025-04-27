@@ -47,22 +47,26 @@ public class RideFragment extends Fragment {
         EditText fromInput = view.findViewById(R.id.fromInputDriver);
         EditText toInput = view.findViewById(R.id.toDriverInput);
         EditText passengerInput = view.findViewById(R.id.passengerDriverInput);
+        EditText dateInput = view.findViewById(R.id.dateInputRider);
 
-        // Get current date
-        String currentDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
+        // 1. Autofill today's date initially
+        String todayDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
+        dateInput.setText(todayDate);
 
         Button requestRideButton = view.findViewById(R.id.requestRideButton);
         requestRideButton.setOnClickListener(v -> {
             String from = fromInput.getText().toString().trim();
             String to = toInput.getText().toString().trim();
             String passengers = passengerInput.getText().toString().trim();
+            String enteredDate = dateInput.getText().toString().trim(); // <-- Get live value
 
-            if (from.isEmpty() || to.isEmpty() || passengers.isEmpty()) {
+            if (from.isEmpty() || to.isEmpty() || passengers.isEmpty() || enteredDate.isEmpty()) {
                 Toast.makeText(getContext(), "Please fill out all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            RideRequest rideRequest = new RideRequest(currentDate, from, to, passengers);
+            // 2. Use whatever is entered into the date field
+            RideRequest rideRequest = new RideRequest(enteredDate, from, to, passengers);
             DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("rideRequests");
 
             String rideId = dbRef.push().getKey(); // generate unique ID
@@ -71,7 +75,6 @@ public class RideFragment extends Fragment {
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(getContext(), "Ride request posted!", Toast.LENGTH_SHORT).show();
 
-                            // Navigate to waiting screen with rideId
                             getParentFragmentManager()
                                     .beginTransaction()
                                     .replace(R.id.fragmentContainerView, RideWaitForDriverFragment.newInstance(rideId, rideRequest))
@@ -81,10 +84,9 @@ public class RideFragment extends Fragment {
                         .addOnFailureListener(e ->
                                 Toast.makeText(getContext(), "Failed to post request", Toast.LENGTH_SHORT).show());
             }
-
         });
 
-        // Optional: Navigation to available rides
+        // Optional: Navigation to your requests
         Button yourRequests= view.findViewById(R.id.yourRequestButton);
         yourRequests.setOnClickListener(v -> {
             getParentFragmentManager()
@@ -94,7 +96,7 @@ public class RideFragment extends Fragment {
                     .commit();
         });
 
-        // Optional: Navigation to available rides
+        // Optional: Navigation to accept offers
         Button acceptOfferButton = view.findViewById(R.id.button2);
         acceptOfferButton.setOnClickListener(v -> {
             getParentFragmentManager()
@@ -104,7 +106,7 @@ public class RideFragment extends Fragment {
                     .commit();
         });
 
-        // Optional: Update A Unaccepcted Ride Request
+        // Optional: Update an unaccepted ride request
         Button updateButton = view.findViewById(R.id.updateRequestButton);
         updateButton.setOnClickListener(v -> {
             getParentFragmentManager()

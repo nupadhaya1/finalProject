@@ -72,21 +72,26 @@ public class DriverFragment extends Fragment {
         EditText fromInput = view.findViewById(R.id.fromInputDriver);
         EditText toInput = view.findViewById(R.id.toDriverInput);
         EditText passengerInput = view.findViewById(R.id.passengerDriverInput);
+        EditText dateInput = view.findViewById(R.id.dateInputDriver);
 
-        String currentDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
+        // 1. Autofill today's date initially
+        String todayDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
+        dateInput.setText(todayDate);
 
         Button offerRideButton = view.findViewById(R.id.updateOfferButtonFinal);
         offerRideButton.setOnClickListener(v -> {
             String from = fromInput.getText().toString().trim();
             String to = toInput.getText().toString().trim();
             String passengers = passengerInput.getText().toString().trim();
+            String enteredDate = dateInput.getText().toString().trim(); // <-- Get whatever is CURRENTLY in the EditText
 
-            if (from.isEmpty() || to.isEmpty() || passengers.isEmpty()) {
+            if (from.isEmpty() || to.isEmpty() || passengers.isEmpty() || enteredDate.isEmpty()) {
                 Toast.makeText(getContext(), "Please fill out all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            DriverOffer offer = new DriverOffer(currentDate, from, to, passengers);
+            // 2. Use the edited date (if changed), otherwise still uses the default autofilled one
+            DriverOffer offer = new DriverOffer(enteredDate, from, to, passengers);
             DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("driveOffers");
 
             String offerId = dbRef.push().getKey();
@@ -94,8 +99,6 @@ public class DriverFragment extends Fragment {
                 dbRef.child(offerId).setValue(offer)
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(getContext(), "Ride offer posted!", Toast.LENGTH_SHORT).show();
-
-                            // Navigate to waiting screen with offerId
                             getParentFragmentManager()
                                     .beginTransaction()
                                     .replace(R.id.fragmentContainerView, DriveWaitforRiderFragment.newInstance(offerId, offer))
@@ -134,8 +137,6 @@ public class DriverFragment extends Fragment {
                     .commit();
         });
 
-
         return view;
     }
-
 }
