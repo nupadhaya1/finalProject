@@ -43,6 +43,7 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 listLayout.removeAllViews();
+
                 totalPoints = 0; // Reset points
 
                 // for loop

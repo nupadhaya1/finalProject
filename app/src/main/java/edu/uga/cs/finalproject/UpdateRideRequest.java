@@ -59,7 +59,7 @@ public class UpdateRideRequest extends Fragment {
                                         "\nDate: " + ride.date +
                                         "\nFrom: " + ride.from +
                                         "\nTo: " + ride.to +
-                                        "\nPassengers: " + ride.passengers +
+                                        "\nPassengers: " + Math.abs(Integer.parseInt(ride.passengers)) +
                                         "\nStatus: " + ride.status);
 
                         rideItemLayout.addView(rideDetails);

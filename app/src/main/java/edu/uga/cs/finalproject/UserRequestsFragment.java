@@ -59,7 +59,7 @@ public class UserRequestsFragment extends Fragment {
                                         "Date: " + request.date + "\n" +
                                         "From: " + request.from + "\n" +
                                         "To: " + request.to + "\n" +
-                                        "Passengers: " + request.passengers + "\n" +
+                                        "Passengers: " + Math.abs(Integer.parseInt(request.passengers)) + "\n" +
                                         "Status: " + request.status
                         );
 

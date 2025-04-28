@@ -57,7 +57,7 @@ public class UpdateDriverOffer extends Fragment {
                                         "\nDate: " + offer.date +
                                         "\nFrom: " + offer.from +
                                         "\nTo: " + offer.to +
-                                        "\nPassengers: " + offer.passengers +
+                                        "\nPassengers: " + Math.abs(Integer.parseInt(offer.passengers)) +
                                         "\nStatus: " + offer.status);
 
                         rideItemLayout.addView(rideDetails);

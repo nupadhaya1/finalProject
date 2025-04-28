@@ -85,7 +85,7 @@ public class DriverAcceptRequestFragment extends Fragment {
                                     "\nDate: " + ride.date +
                                     "\nFrom: " + ride.from +
                                     "\nTo: " + ride.to +
-                                    "\nPassengers: " + ride.passengers +
+                                    "\nPassengers: " + Math.abs(Integer.parseInt(ride.passengers))+
                                     "\nStatus: " + ride.status);
 
                     // Button to accept

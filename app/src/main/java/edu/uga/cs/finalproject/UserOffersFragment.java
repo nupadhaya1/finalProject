@@ -60,7 +60,7 @@ public class UserOffersFragment extends Fragment {
                                         "Date: " + offer.date + "\n" +
                                         "From: " + offer.from + "\n" +
                                         "To: " + offer.to + "\n" +
-                                        "Passengers: " + offer.passengers + "\n" +
+                                        "Passengers: " + Math.abs(Integer.parseInt(offer.passengers)) + "\n" +
                                         "Status: " + offer.status
                         );
 
