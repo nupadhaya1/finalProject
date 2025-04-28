@@ -25,11 +25,16 @@ public class RiderAcceptRequestFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+        // create View
         View view = inflater.inflate(R.layout.fragment_rider_accept_request, container, false);
 
+        // create a linear layout
         LinearLayout requestListLayout = view.findViewById(R.id.riderRequestListLayout);
+
+        //create and initialize a database reference
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("driveOffers");
 
+        // database listener
         dbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -88,16 +93,18 @@ public class RiderAcceptRequestFragment extends Fragment {
                         rideItemLayout.addView(rideDetails);
                         rideItemLayout.addView(acceptButton);
                         requestListLayout.addView(rideItemLayout);
-                    }
-                }
-            }
+                    } // if statement
+                } // for loop
+            } // onDataChange
 
             @Override
             public void onCancelled(DatabaseError error) {
                 Toast.makeText(getContext(), "Failed to load ride offers", Toast.LENGTH_SHORT).show();
-            }
+            } // onCancelled
         });
 
+        // return the view
         return view;
-    }
-}
+    } //onCreateView
+
+} //RiderAcceptRequestFragment

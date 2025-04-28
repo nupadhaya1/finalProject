@@ -27,10 +27,12 @@ public class MainScreen extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("");
 
-        // Default fragment
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragmentContainerView, new RideFragment())
-                .commit();
+        // Only load default fragment when the Activity is created for the FIRST time
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragmentContainerView, new RideFragment())
+                    .commit();
+        }
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
 
@@ -48,17 +50,18 @@ public class MainScreen extends AppCompatActivity {
                 selectedFragment = new HistoryFragment();
             } else if (itemId == R.id.nav_about) {
                 selectedFragment = new AboutFragment();
-            } // if else
+            }
 
             if (selectedFragment != null) {
                 getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragmentContainerView, selectedFragment)
                         .commit();
-            } // if statement
+            }
 
             return true;
         });
     } // onCreate
+
 
     // Inflate the logout menu
     @Override

@@ -27,25 +27,33 @@ public class UserOffersFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // create View
         View view = inflater.inflate(R.layout.fragment_user_offers, container, false);
+
+       // create and initialize linearlayout
         LinearLayout listLayout = view.findViewById(R.id.rideOffersListLayout);
 
+        // initialize database reference
         driveOffersRef = FirebaseDatabase.getInstance().getReference("driveOffers");
 
+        // add listener to the database reference
         driveOffersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 listLayout.removeAllViews();
 
+                // for loop for displaying
                 for (DataSnapshot rideSnap : snapshot.getChildren()) {
                     DriverOffer offer = rideSnap.getValue(DriverOffer.class);
                     String offerId = rideSnap.getKey();
 
+                    // check if offer isnt null
                     if (offer != null) {
                         LinearLayout itemLayout = new LinearLayout(getContext());
                         itemLayout.setOrientation(LinearLayout.VERTICAL);
                         itemLayout.setPadding(20, 20, 20, 20);
 
+                        // create text input
                         TextView infoText = new TextView(getContext());
                         infoText.setText(
                                 "ID: " + offerId + "\n" +
@@ -56,6 +64,7 @@ public class UserOffersFragment extends Fragment {
                                         "Status: " + offer.status
                         );
 
+                        // create cancel button
                         Button cancelButton = new Button(getContext());
                         cancelButton.setText("Cancel Offer");
                         cancelButton.setOnClickListener(v -> {
@@ -79,16 +88,18 @@ public class UserOffersFragment extends Fragment {
                                 ViewGroup.LayoutParams.MATCH_PARENT, 2));
                         divider.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
                         listLayout.addView(divider);
-                    }
-                }
-            }
+                    } // if statement
+                } // forloop
+            } // onDataChange
 
             @Override
             public void onCancelled(DatabaseError error) {
                 Toast.makeText(getContext(), "Failed to load drive offers", Toast.LENGTH_SHORT).show();
-            }
+            } // onCancelled
         });
 
+        // return the view
         return view;
-    }
-}
+    } // onCreateView
+
+} // UserOffersFragment

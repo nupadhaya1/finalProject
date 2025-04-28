@@ -27,20 +27,27 @@ public class UserRequestsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // create View
         View view = inflater.inflate(R.layout.fragment_user_requests, container, false);
+
+        // create and initialize linearlayout
         LinearLayout listLayout = view.findViewById(R.id.rideRequestListLayout);
 
+        // initialize database reference
         rideRequestsRef = FirebaseDatabase.getInstance().getReference("rideRequests");
 
+        // add listener to the database reference
         rideRequestsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 listLayout.removeAllViews();
 
+                // display
                 for (DataSnapshot rideSnap : snapshot.getChildren()) {
                     RideRequest request = rideSnap.getValue(RideRequest.class);
                     String rideId = rideSnap.getKey();
 
+                    // check requests
                     if (request != null) {
                         LinearLayout itemLayout = new LinearLayout(getContext());
                         itemLayout.setOrientation(LinearLayout.VERTICAL);
@@ -56,6 +63,7 @@ public class UserRequestsFragment extends Fragment {
                                         "Status: " + request.status
                         );
 
+                        // create cancel button and functionality
                         Button cancelButton = new Button(getContext());
                         cancelButton.setText("Cancel Ride");
                         cancelButton.setOnClickListener(v -> {
@@ -79,16 +87,17 @@ public class UserRequestsFragment extends Fragment {
                                 ViewGroup.LayoutParams.MATCH_PARENT, 2));
                         divider.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
                         listLayout.addView(divider);
-                    }
-                }
-            }
+                    } // if statement
+                } // for loop
+            } // onDataChange
 
             @Override
             public void onCancelled(DatabaseError error) {
                 Toast.makeText(getContext(), "Failed to load ride requests", Toast.LENGTH_SHORT).show();
-            }
+            } // onCancelled
         });
 
+        // return view
         return view;
-    }
-}
+    } // onCreateView
+} //UserRequestsFragment

@@ -62,13 +62,16 @@ public class DriverFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
+        } // if stataement
+    } // onCreate
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // create view
         View view = inflater.inflate(R.layout.fragment_driver, container, false);
 
+        // create and initialize UI elements
         EditText fromInput = view.findViewById(R.id.fromInputDriver);
         EditText toInput = view.findViewById(R.id.toDriverInput);
         EditText passengerInput = view.findViewById(R.id.passengerDriverInput);
@@ -78,6 +81,7 @@ public class DriverFragment extends Fragment {
         String todayDate = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault()).format(new Date());
         dateInput.setText(todayDate);
 
+        // listener for offer ride button
         Button offerRideButton = view.findViewById(R.id.updateOfferButtonFinal);
         offerRideButton.setOnClickListener(v -> {
             String from = fromInput.getText().toString().trim();
@@ -86,19 +90,24 @@ public class DriverFragment extends Fragment {
             // Passengers Int Valid
             String passengersInput = passengerInput.getText().toString().trim();
             int passengersInt;
+
+            // try catch for integer input
             try {
                 passengersInt = Integer.parseInt(passengersInput) * 1;
             } catch (NumberFormatException e) {
                 Toast.makeText(getContext(), "Passengers must be a valid number!", Toast.LENGTH_SHORT).show();
                 return; // Stop submitting if not a number
-            }
+            } // try catch
+
+            // create string for passengers
             String passengers = String.valueOf(passengersInt);
             String enteredDate = dateInput.getText().toString().trim(); // <-- Get whatever is CURRENTLY in the EditText
 
+            // check for input
             if (from.isEmpty() || to.isEmpty() || passengers.isEmpty() || enteredDate.isEmpty()) {
                 Toast.makeText(getContext(), "Please fill out all fields", Toast.LENGTH_SHORT).show();
                 return;
-            }
+            } // if statament
 
             // 2. Use the edited date (if changed), otherwise still uses the default autofilled one
             DriverOffer offer = new DriverOffer(enteredDate, from, to, passengers);
@@ -117,9 +126,10 @@ public class DriverFragment extends Fragment {
                         })
                         .addOnFailureListener(e ->
                                 Toast.makeText(getContext(), "Failed to post ride offer", Toast.LENGTH_SHORT).show());
-            }
+            } // if statement
         });
 
+        // create button for your offers page and change fragment
         Button yourOffers = view.findViewById(R.id.yourOffersButton);
         yourOffers.setOnClickListener(v -> {
             getParentFragmentManager()
@@ -129,6 +139,7 @@ public class DriverFragment extends Fragment {
                     .commit();
         });
 
+        // create button for accept ride and change fragment
         Button acceptRideButton = view.findViewById(R.id.acceptRideButton);
         acceptRideButton.setOnClickListener(v -> {
             getParentFragmentManager()
@@ -138,6 +149,7 @@ public class DriverFragment extends Fragment {
                     .commit();
         });
 
+        // create button for update oofer and change fragment
         Button updateoffer = view.findViewById(R.id.updateOfferButton);
         updateoffer.setOnClickListener(v -> {
             getParentFragmentManager()
@@ -147,6 +159,8 @@ public class DriverFragment extends Fragment {
                     .commit();
         });
 
+        // return the view
         return view;
-    }
-}
+    } // onCreateView
+
+} // DriverFragment

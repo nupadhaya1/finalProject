@@ -17,6 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class ActualUpdateOfferFragment extends Fragment {
 
+    // create necessary UI variables
     private String offerId;
     private EditText fromInput, toInput, passengerInput;
     private DatabaseReference dbRef;
@@ -28,26 +29,33 @@ public class ActualUpdateOfferFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // initialize offerId
         if (getArguments() != null) {
             offerId = getArguments().getString("offerId");
-        }
-    }
+        } // if statement
+    } // onCreate
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // create View
         View view = inflater.inflate(R.layout.fragment_actual_update_offer, container, false);
 
+        // initialize UI elements
         fromInput = view.findViewById(R.id.fromInputDriver);
         toInput = view.findViewById(R.id.toDriverInput);
         passengerInput = view.findViewById(R.id.passengerDriverInput);
         Button updateButton = view.findViewById(R.id.updateOfferButtonFinal);
 
+        // check offer id is provided
         if (offerId == null) {
             Toast.makeText(getContext(), "No offer ID provided", Toast.LENGTH_SHORT).show();
             return view;
-        }
+        } // if statement
 
+        // initialize firebase reference
         dbRef = FirebaseDatabase.getInstance().getReference("driveOffers").child(offerId);
 
         // Load existing ride data
@@ -59,13 +67,13 @@ public class ActualUpdateOfferFragment extends Fragment {
                     fromInput.setText(offer.from);
                     toInput.setText(offer.to);
                     passengerInput.setText(offer.passengers);
-                }
-            }
+                } // if statement
+            } // onDataChange
 
             @Override
             public void onCancelled(DatabaseError error) {
                 Toast.makeText(getContext(), "Failed to load ride data", Toast.LENGTH_SHORT).show();
-            }
+            } // onCancelled
         });
 
         // Update ride when button is pressed
@@ -77,8 +85,9 @@ public class ActualUpdateOfferFragment extends Fragment {
             if (updatedFrom.isEmpty() || updatedTo.isEmpty() || updatedPassengers.isEmpty()) {
                 Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 return;
-            }
+            } // if statement
 
+            // set values
             dbRef.child("from").setValue(updatedFrom);
             dbRef.child("to").setValue(updatedTo);
             dbRef.child("passengers").setValue(updatedPassengers);
@@ -94,6 +103,7 @@ public class ActualUpdateOfferFragment extends Fragment {
 
         });
 
+        // return view
         return view;
-    }
-}
+    } // onCreateView
+} //ActualUpdateOfferFragment

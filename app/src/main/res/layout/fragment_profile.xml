@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#BA0C2F"
     tools:context=".ProfileFragment">
 
     <ScrollView
@@ -18,28 +19,31 @@
             android:id="@+id/userNameText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Name"
-            android:textSize="18sp"
             android:gravity="center"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:text="Name"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/userEmailText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Email"
-            android:textSize="18sp"
             android:gravity="center"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:text="Email"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/userPoints"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="999 Points"
-            android:textSize="18sp"
             android:gravity="center"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:text="999 Points"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
 
     </LinearLayout>
 

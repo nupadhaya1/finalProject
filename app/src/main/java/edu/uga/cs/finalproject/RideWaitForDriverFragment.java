@@ -48,8 +48,10 @@ public class RideWaitForDriverFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // create view
         View view = inflater.inflate(R.layout.fragment_ride_wait_for_driver, container, false);
 
+        //create and initialize textviews and button
         TextView dateText = view.findViewById(R.id.dateText);
         TextView fromText = view.findViewById(R.id.fromText);
         TextView toText = view.findViewById(R.id.toText);
@@ -57,9 +59,12 @@ public class RideWaitForDriverFragment extends Fragment {
         TextView rideIdText = view.findViewById(R.id.rideIdText);
         TextView statusText = view.findViewById(R.id.statusText);
         Button cancelButton = view.findViewById(R.id.cancelRideRequest);
-
         Bundle args = getArguments();
+
+        // check if args isnt null
         if (args != null) {
+
+            // create info variables
             String date = args.getString(ARG_DATE);
             String from = args.getString(ARG_FROM);
             String to = args.getString(ARG_TO);
@@ -94,22 +99,24 @@ public class RideWaitForDriverFragment extends Fragment {
                                     .replace(R.id.fragmentContainerView, activeTripRider)
                                     .addToBackStack(null)
                                     .commit();
-                        }
+                        } // if statement
 
                     } else {
                         statusText.setText("Status: canceled or not found");
-                    }
+                    } // else statement
 
-                }
+                } // on DataChange
 
                 @Override
                 public void onCancelled(DatabaseError error) {
                     Toast.makeText(getContext(), "Error loading ride status", Toast.LENGTH_SHORT).show();
-                }
+                } // onCancelled
             };
 
+            // add listener to database reference
             rideRef.addValueEventListener(statusListener);
 
+            // listener to button
             cancelButton.setOnClickListener(v -> {
                 rideRef.removeValue()
                         .addOnSuccessListener(aVoid -> {
@@ -119,16 +126,17 @@ public class RideWaitForDriverFragment extends Fragment {
                         .addOnFailureListener(e ->
                                 Toast.makeText(getContext(), "Failed to cancel request", Toast.LENGTH_SHORT).show());
             });
-        }
+        } // if statement
 
+        // return view
         return view;
-    }
+    } //onCreateView
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         if (rideRef != null && statusListener != null) {
             rideRef.removeEventListener(statusListener);
-        }
-    }
-}
+        } // if statement
+    } // onDestroyView
+} // RideWaitForDriverFragment

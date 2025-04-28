@@ -24,19 +24,27 @@ public class UpdateRideRequest extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // create the view
         View view = inflater.inflate(R.layout.fragment_update_ride_request, container, false); // reuse the layout
+
+        // create and initialize linear layout
         LinearLayout requestListLayout = view.findViewById(R.id.updateRequestListLayout);
+
+        // initialize database reference
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("rideRequests");
 
+        // add listener to database reference
         dbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 requestListLayout.removeAllViews(); // Clear previous views
 
+                // for loop for displaying
                 for (DataSnapshot rideSnap : snapshot.getChildren()) {
                     RideRequest ride = rideSnap.getValue(RideRequest.class);
                     String requestId = rideSnap.getKey();
 
+                    // check only unaccepted rides
                     if (ride != null && ride.status != null && ride.status.equalsIgnoreCase("unaccepted")) {
                         // Create container for each request
                         LinearLayout rideItemLayout = new LinearLayout(getContext());
@@ -81,16 +89,17 @@ public class UpdateRideRequest extends Fragment {
                         divider.setLayoutParams(dividerParams);
                         divider.setBackgroundColor(getResources().getColor(android.R.color.white));
                         requestListLayout.addView(divider);
-                    }
-                }
-            }
+                    } // if statement
+                } // for loop
+            } // onDataChange
 
             @Override
             public void onCancelled(DatabaseError error) {
                 Toast.makeText(getContext(), "Failed to load ride requests", Toast.LENGTH_SHORT).show();
-            }
+            } // on Cancelled
         });
 
+        // return the view
         return view;
-    }
+    } // UpdateRideRequest
 }

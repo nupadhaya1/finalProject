@@ -29,17 +29,23 @@ public class HistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // create a view
         View view = inflater.inflate(R.layout.fragment_history, container, false);
+
+        // create a linear layout
         LinearLayout listLayout = view.findViewById(R.id.historyListLayout);
 
+        // initialize the database
         rideRequestsRef = FirebaseDatabase.getInstance().getReference("rideRequests");
 
+        // add listener for database
         rideRequestsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 listLayout.removeAllViews();
                 totalPoints = 0; // Reset points
 
+                // for loop
                 for (DataSnapshot rideSnap : snapshot.getChildren()) {
                     RideRequest request = rideSnap.getValue(RideRequest.class);
                     String rideId = rideSnap.getKey();
@@ -48,11 +54,13 @@ public class HistoryFragment extends Fragment {
                     Boolean driverConfirmed = rideSnap.child("confirmation").child("driver").getValue(Boolean.class);
                     Boolean riderConfirmed = rideSnap.child("confirmation").child("rider").getValue(Boolean.class);
 
+                    // check if driver and rider confirm the ride
                     if (request != null && Boolean.TRUE.equals(driverConfirmed) && Boolean.TRUE.equals(riderConfirmed)) {
                         LinearLayout itemLayout = new LinearLayout(getContext());
                         itemLayout.setOrientation(LinearLayout.VERTICAL);
                         itemLayout.setPadding(20, 20, 20, 20);
 
+                        // try catch
                         try {
                             int passengers = Integer.parseInt(request.passengers);
 
@@ -84,9 +92,11 @@ public class HistoryFragment extends Fragment {
 
                         } catch (NumberFormatException e) {
                             // Ignore if passengers is not a number
-                        }
-                    }
-                }
+                        } // try catch statements
+
+                    } // if statement
+
+                } // for loop for displaying
 
                 // Points Summary at the end
                 TextView pointsSummary = new TextView(getContext());
@@ -94,7 +104,7 @@ public class HistoryFragment extends Fragment {
                 pointsSummary.setPadding(0, 40, 0, 0);
                 pointsSummary.setTextSize(20);
                 listLayout.addView(pointsSummary);
-            }
+            } // onDataChange
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {

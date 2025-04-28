@@ -34,20 +34,25 @@ public class ActiveTripRider extends Fragment {
             rideId = getArguments().getString("rideId");
         }
 
+        // initialize rideRef for database
         rideRef = FirebaseDatabase.getInstance().getReference("rideRequests").child(rideId);
 
+        // button listener for trip confirmation
         Button endRideButton = view.findViewById(R.id.endRideButton);
         endRideButton.setOnClickListener(v -> {
             confirmEndOfTrip("rider");
         });
 
+        // return the view
         return view;
-    }
+    } // onCreateView
 
     private void confirmEndOfTrip(String role) {
+
+        // if rideref is null return
         if (rideRef == null)
             return;
-
+        // Mark the user's confirmation (either rider or driver) as true in the ride's confirmation section
         rideRef.child("confirmation").child(role).setValue(true)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(getContext(), "Waiting for driver to confirm ride end...", Toast.LENGTH_SHORT)
@@ -77,16 +82,17 @@ public class ActiveTripRider extends Fragment {
                                         .replace(R.id.fragmentContainerView, new HistoryFragment())
                                         .addToBackStack(null)
                                         .commit();
-                            }
-                        }
+                            } // if statement
+                        } // onDataChange
 
                         @Override
                         public void onCancelled(DatabaseError error) {
                             Toast.makeText(getContext(), "Failed to check confirmation", Toast.LENGTH_SHORT).show();
-                        }
+                        } // onCancelled
                     });
                 })
                 .addOnFailureListener(
                         e -> Toast.makeText(getContext(), "Failed to confirm ride end", Toast.LENGTH_SHORT).show());
-    }
-}
+    } // confirmEndOFTrip
+
+} // ActiveTripRider

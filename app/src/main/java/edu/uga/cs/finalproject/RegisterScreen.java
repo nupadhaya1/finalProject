@@ -61,7 +61,6 @@ public class RegisterScreen extends AppCompatActivity {
 
             // check the user input if it is valid Probably add firebase logic for passwords
             // HERE ****************************
-
             String first = firstName.getText().toString().trim();
             String last = lastName.getText().toString().trim();
             String emailString = emailInput.getText().toString().trim();

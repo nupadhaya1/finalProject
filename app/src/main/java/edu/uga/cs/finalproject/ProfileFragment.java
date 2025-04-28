@@ -53,6 +53,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -62,12 +63,17 @@ public class ProfileFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // create a view
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
+        // initialize the text
         TextView userNameText = view.findViewById(R.id.userNameText);
         TextView userEmailText = view.findViewById(R.id.userEmailText);
 
+        // get the user
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        // if the user is not null
         if (user != null) {
             // Set email
             userEmailText.setText("Email: " + user.getEmail());
@@ -78,9 +84,11 @@ public class ProfileFragment extends Fragment {
                 userNameText.setText("Name: " + name);
             } else {
                 userNameText.setText("Name not set");
-            }
-        }
+            } // end of if else
+        } // if statement
 
+        // return the view
         return view;
-    }
-}
+    } // onCreateView
+
+} // ProfileFragment

@@ -34,20 +34,27 @@ public class ActiveTripDriver extends Fragment {
             rideId = getArguments().getString("rideId");
         }
 
+        // initialize firebase reference
         rideRef = FirebaseDatabase.getInstance().getReference("rideRequests").child(rideId);
 
+        // create end drive button and listener
         Button endDriveButton = view.findViewById(R.id.endRideButton);
         endDriveButton.setOnClickListener(v -> {
             confirmEndOfTrip("driver");
         });
 
+        // return to view
         return view;
-    }
+
+    } // onCreateView
 
     private void confirmEndOfTrip(String role) {
+
+        // if rideRef  is null return
         if (rideRef == null)
             return;
 
+        // Mark the user's confirmation (either rider or driver) as true in the ride's confirmation section
         rideRef.child("confirmation").child(role).setValue(true)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(getContext(), "Waiting for rider to confirm ride end...", Toast.LENGTH_SHORT).show();
@@ -76,16 +83,17 @@ public class ActiveTripDriver extends Fragment {
                                         .replace(R.id.fragmentContainerView, new HistoryFragment())
                                         .addToBackStack(null)
                                         .commit();
-                            }
-                        }
+                            } // if statement
+                        } // onDataChange
 
                         @Override
                         public void onCancelled(DatabaseError error) {
                             Toast.makeText(getContext(), "Failed to check confirmation", Toast.LENGTH_SHORT).show();
-                        }
+                        } // onCancelled
                     });
                 })
                 .addOnFailureListener(
                         e -> Toast.makeText(getContext(), "Failed to confirm drive end", Toast.LENGTH_SHORT).show());
     }
-}
+
+} // ActiveTripDriver

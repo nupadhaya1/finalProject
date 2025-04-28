@@ -98,7 +98,7 @@ public class RideFragment extends Fragment {
             }
         });
 
-        // Optional: Navigation to your requests
+        // Navigation to your requests
         Button yourRequests= view.findViewById(R.id.yourRequestButton);
         yourRequests.setOnClickListener(v -> {
             getParentFragmentManager()
@@ -108,7 +108,7 @@ public class RideFragment extends Fragment {
                     .commit();
         });
 
-        // Optional: Navigation to accept offers
+        // Navigation to accept offers
         Button acceptOfferButton = view.findViewById(R.id.button2);
         acceptOfferButton.setOnClickListener(v -> {
             getParentFragmentManager()
@@ -118,7 +118,7 @@ public class RideFragment extends Fragment {
                     .commit();
         });
 
-        // Optional: Update an unaccepted ride request
+        // Update an unaccepted ride request
         Button updateButton = view.findViewById(R.id.updateRequestButton);
         updateButton.setOnClickListener(v -> {
             getParentFragmentManager()
