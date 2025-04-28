@@ -145,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
-                android:backgroundTint="@color/white"
+                android:backgroundTint="#5EDC63"
                 android:text="Offer"
                 android:textColor="@color/black"
                 android:textStyle="bold" />
@@ -178,16 +178,6 @@
                 android:layout_marginTop="5dp"
                 android:backgroundTint="@color/white"
                 android:text="Accept A Request"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/updateOfferButton"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:backgroundTint="@color/white"
-                android:text="Update Offer"
                 android:textColor="@color/black" />
 
         </LinearLayout>

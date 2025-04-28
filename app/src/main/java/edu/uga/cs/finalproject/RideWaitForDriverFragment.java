@@ -25,6 +25,7 @@ public class RideWaitForDriverFragment extends Fragment {
     private static final String ARG_RIDE_ID = "rideId";
     private static final String ARG_STATUS = "status";
 
+
     private DatabaseReference rideRef;
     private ValueEventListener statusListener;
 
@@ -48,6 +49,7 @@ public class RideWaitForDriverFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         // create view
         View view = inflater.inflate(R.layout.fragment_ride_wait_for_driver, container, false);
 
@@ -59,6 +61,7 @@ public class RideWaitForDriverFragment extends Fragment {
         TextView rideIdText = view.findViewById(R.id.rideIdText);
         TextView statusText = view.findViewById(R.id.statusText);
         Button cancelButton = view.findViewById(R.id.cancelRideRequest);
+        Button updateButton = view.findViewById(R.id.updateRideRequest);
         Bundle args = getArguments();
 
         // check if args isnt null
@@ -80,6 +83,9 @@ public class RideWaitForDriverFragment extends Fragment {
 
             // Get reference to this specific ride request
             rideRef = FirebaseDatabase.getInstance().getReference("rideRequests").child(rideId);
+
+            MainScreen.isInWaitingFragment = true;
+            MainScreen.currentWaitingRef = rideRef;
 
             // Listen for status changes
             statusListener = new ValueEventListener() {
@@ -118,14 +124,37 @@ public class RideWaitForDriverFragment extends Fragment {
 
             // listener to button
             cancelButton.setOnClickListener(v -> {
-                rideRef.removeValue()
-                        .addOnSuccessListener(aVoid -> {
-                            Toast.makeText(getContext(), "Ride request canceled", Toast.LENGTH_SHORT).show();
-                            getParentFragmentManager().popBackStack();
-                        })
-                        .addOnFailureListener(e ->
-                                Toast.makeText(getContext(), "Failed to cancel request", Toast.LENGTH_SHORT).show());
+                if (rideRef != null) {
+                    rideRef.removeValue()
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(getContext(), "Ride request canceled", Toast.LENGTH_SHORT).show();
+
+                                // Correct way: replace fragment to RideFragment after cancellation
+                                getParentFragmentManager().beginTransaction()
+                                        .replace(R.id.fragmentContainerView, new RideFragment())
+                                        .commit();
+                            })
+                            .addOnFailureListener(e ->
+                                    Toast.makeText(getContext(), "Failed to cancel request", Toast.LENGTH_SHORT).show());
+                }
             });
+
+
+            updateButton.setOnClickListener(v -> {
+                if (rideRef != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("requestId", args.getString(ARG_RIDE_ID)); // Safely pass rideId
+
+                    ActualUpdateFragment actualUpdateFragment = new ActualUpdateFragment();
+                    actualUpdateFragment.setArguments(bundle);
+
+                    getParentFragmentManager().beginTransaction()
+                            .replace(R.id.fragmentContainerView, actualUpdateFragment)
+                            .addToBackStack(null)
+                            .commit();
+                }
+            });
+
         } // if statement
 
         // return view
@@ -134,6 +163,9 @@ public class RideWaitForDriverFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        MainScreen.isInWaitingFragment = false;
+        MainScreen.currentWaitingRef = null;
+
         super.onDestroyView();
         if (rideRef != null && statusListener != null) {
             rideRef.removeEventListener(statusListener);

@@ -149,16 +149,6 @@ public class DriverFragment extends Fragment {
                     .commit();
         });
 
-        // create button for update oofer and change fragment
-        Button updateoffer = view.findViewById(R.id.updateOfferButton);
-        updateoffer.setOnClickListener(v -> {
-            getParentFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragmentContainerView, new UpdateDriverOffer())
-                    .addToBackStack(null)
-                    .commit();
-        });
-
         // return the view
         return view;
     } // onCreateView

@@ -59,6 +59,8 @@ public class DriveWaitforRiderFragment extends Fragment {
         TextView rideIdText = view.findViewById(R.id.rideIdText);
         TextView statusText = view.findViewById(R.id.statusText);
         Button cancelButton = view.findViewById(R.id.cancelRideRequest);
+        Button updateButton = view.findViewById(R.id.updateRideRequest);
+
         Bundle args = getArguments();
 
         // check arguements
@@ -81,12 +83,15 @@ public class DriveWaitforRiderFragment extends Fragment {
             // initialze the ride database
             rideRef = FirebaseDatabase.getInstance().getReference("driveOffers").child(rideId);
 
+            MainScreen.isInWaitingFragment = true;
+            MainScreen.currentWaitingRef = rideRef;
+
             // create a listener
             statusListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     RideRequest updatedRide = snapshot.getValue(RideRequest.class);
-                   // check to see if updateRide isnt null
+                    // check to see if updateRide isnt null
                     if (updatedRide != null) {
                         statusText.setText("Status: " + updatedRide.status);
 
@@ -120,13 +125,35 @@ public class DriveWaitforRiderFragment extends Fragment {
 
             // add listener to  button
             cancelButton.setOnClickListener(v -> {
-                rideRef.removeValue()
-                        .addOnSuccessListener(aVoid -> {
-                            Toast.makeText(getContext(), "Ride offer canceled", Toast.LENGTH_SHORT).show();
-                            getParentFragmentManager().popBackStack();
-                        })
-                        .addOnFailureListener(e -> Toast
-                                .makeText(getContext(), "Failed to cancel ride offer", Toast.LENGTH_SHORT).show());
+                if (rideRef != null) {
+                    rideRef.removeValue()
+                            .addOnSuccessListener(aVoid -> {
+                                Toast.makeText(getContext(), "Ride offer canceled", Toast.LENGTH_SHORT).show();
+
+                                // Instead of popBackStack(), manually replace with DriverFragment
+                                getParentFragmentManager().beginTransaction()
+                                        .replace(R.id.fragmentContainerView, new DriverFragment())
+                                        .commit();
+                            })
+                            .addOnFailureListener(e -> Toast
+                                    .makeText(getContext(), "Failed to cancel ride offer", Toast.LENGTH_SHORT).show());
+                }
+            });
+
+
+            updateButton.setOnClickListener(v -> {
+                if (rideRef != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("offerId", args.getString(ARG_RIDE_ID)); // Pass offerId safely
+
+                    ActualUpdateOfferFragment actualUpdateOfferFragment = new ActualUpdateOfferFragment();
+                    actualUpdateOfferFragment.setArguments(bundle);
+
+                    getParentFragmentManager().beginTransaction()
+                            .replace(R.id.fragmentContainerView, actualUpdateOfferFragment)
+                            .addToBackStack(null)
+                            .commit();
+                }
             });
 
         } // if statement
@@ -138,6 +165,9 @@ public class DriveWaitforRiderFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        MainScreen.isInWaitingFragment = false;
+        MainScreen.currentWaitingRef = null;
+
         super.onDestroyView();
         // if rider is null and status listener is null
         if (rideRef != null && statusListener != null) {

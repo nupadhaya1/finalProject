@@ -118,16 +118,8 @@ public class RideFragment extends Fragment {
                     .commit();
         });
 
-        // Update an unaccepted ride request
-        Button updateButton = view.findViewById(R.id.updateRequestButton);
-        updateButton.setOnClickListener(v -> {
-            getParentFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragmentContainerView, new UpdateRideRequest())
-                    .addToBackStack(null)
-                    .commit();
-            Toast.makeText(getContext(), "Update Ride Request Page!", Toast.LENGTH_SHORT).show();
-        });
+
+
 
         return view;
     }

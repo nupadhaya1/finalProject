@@ -146,10 +146,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="15dp"
-                android:backgroundTint="@color/white"
-                android:textStyle="bold"
+                android:backgroundTint="#5EDC63"
                 android:text="Request"
-                android:textColor="@color/black" />
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
 
             <TextView
                 android:id="@+id/alternate"
@@ -179,16 +180,6 @@
                 android:layout_marginTop="5dp"
                 android:backgroundTint="@color/white"
                 android:text="Accept an Offer"
-                android:textColor="@color/black" />
-
-            <Button
-                android:id="@+id/updateRequestButton"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:backgroundTint="@color/white"
-                android:text="Update a Request"
                 android:textColor="@color/black" />
 
 

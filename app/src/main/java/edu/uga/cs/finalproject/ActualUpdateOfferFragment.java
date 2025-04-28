@@ -1,7 +1,9 @@
 package edu.uga.cs.finalproject;
 
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +21,8 @@ public class ActualUpdateOfferFragment extends Fragment {
 
     // create necessary UI variables
     private String offerId;
-    private EditText fromInput, toInput, passengerInput;
+    private EditText fromInput, toInput, passengerInput, dateInput;
+
     private DatabaseReference dbRef;
 
     public ActualUpdateOfferFragment() {
@@ -48,6 +51,8 @@ public class ActualUpdateOfferFragment extends Fragment {
         toInput = view.findViewById(R.id.toDriverInput);
         passengerInput = view.findViewById(R.id.passengerDriverInput);
         Button updateButton = view.findViewById(R.id.updateOfferButtonFinal);
+        dateInput = view.findViewById(R.id.dateInputDriver);
+
 
         // check offer id is provided
         if (offerId == null) {
@@ -62,12 +67,13 @@ public class ActualUpdateOfferFragment extends Fragment {
         dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                 DriverOffer offer = snapshot.getValue(DriverOffer.class);
+                DriverOffer offer = snapshot.getValue(DriverOffer.class);
                 if (offer != null) {
                     fromInput.setText(offer.from);
                     toInput.setText(offer.to);
                     passengerInput.setText(offer.passengers);
-                } // if statement
+                    dateInput.setText(offer.date);
+                }
             } // onDataChange
 
             @Override
@@ -81,27 +87,37 @@ public class ActualUpdateOfferFragment extends Fragment {
             String updatedFrom = fromInput.getText().toString().trim();
             String updatedTo = toInput.getText().toString().trim();
             String updatedPassengers = passengerInput.getText().toString().trim();
+            String updatedDate = dateInput.getText().toString().trim();
 
-            if (updatedFrom.isEmpty() || updatedTo.isEmpty() || updatedPassengers.isEmpty()) {
+            if (updatedFrom.isEmpty() || updatedTo.isEmpty() || updatedPassengers.isEmpty() || updatedDate.isEmpty()) {
                 Toast.makeText(getContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
                 return;
-            } // if statement
+            }
 
-            // set values
+            // Update Firebase values
             dbRef.child("from").setValue(updatedFrom);
             dbRef.child("to").setValue(updatedTo);
             dbRef.child("passengers").setValue(updatedPassengers);
 
             Toast.makeText(getContext(), "Ride updated successfully!", Toast.LENGTH_SHORT).show();
 
-                getParentFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragmentContainerView, new DriverFragment())
-                        .addToBackStack(null)
-                        .commit();
+            // Navigate back to DriveWaitforRiderFragment
+            DriveWaitforRiderFragment driveWaitFragment = DriveWaitforRiderFragment.newInstance(offerId, new DriverOffer(
+                    updatedDate,
+                    updatedFrom,
+                    updatedTo,
+                    updatedPassengers,
+                    "unaccepted"
+            ));
 
 
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainerView, driveWaitFragment)
+                    .addToBackStack(null)
+                    .commit();
         });
+
 
         // return view
         return view;
