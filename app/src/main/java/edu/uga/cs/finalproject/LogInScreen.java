@@ -41,6 +41,7 @@ public class LogInScreen extends AppCompatActivity {
         // Initialize Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
 
+
         // Initialize UI elements
         usernameInput = findViewById(R.id.usernameEdit);
         passwordInput = findViewById(R.id.passwordEdit);
