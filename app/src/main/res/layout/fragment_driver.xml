@@ -161,16 +161,6 @@
                 android:textColor="@color/white" />
 
             <Button
-                android:id="@+id/yourOffersButton"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:backgroundTint="@color/white"
-                android:text="Your Offers"
-                android:textColor="@color/black" />
-
-            <Button
                 android:id="@+id/acceptRideButton"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"

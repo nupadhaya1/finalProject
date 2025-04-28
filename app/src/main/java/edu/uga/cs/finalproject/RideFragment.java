@@ -98,16 +98,6 @@ public class RideFragment extends Fragment {
             }
         });
 
-        // Navigation to your requests
-        Button yourRequests= view.findViewById(R.id.yourRequestButton);
-        yourRequests.setOnClickListener(v -> {
-            getParentFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragmentContainerView, new UserRequestsFragment())
-                    .addToBackStack(null)
-                    .commit();
-        });
-
         // Navigation to accept offers
         Button acceptOfferButton = view.findViewById(R.id.button2);
         acceptOfferButton.setOnClickListener(v -> {
