@@ -129,15 +129,6 @@ public class DriverFragment extends Fragment {
             } // if statement
         });
 
-        // create button for your offers page and change fragment
-        Button yourOffers = view.findViewById(R.id.yourOffersButton);
-        yourOffers.setOnClickListener(v -> {
-            getParentFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragmentContainerView, new UserOffersFragment())
-                    .addToBackStack(null)
-                    .commit();
-        });
 
         // create button for accept ride and change fragment
         Button acceptRideButton = view.findViewById(R.id.acceptRideButton);
