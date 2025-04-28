@@ -1,64 +1,107 @@
 package edu.uga.cs.finalproject;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HistoryFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 public class HistoryFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private DatabaseReference rideRequestsRef;
+    private int totalPoints = 0; // Points counter
 
     public HistoryFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HistoryFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HistoryFragment newInstance(String param1, String param2) {
-        HistoryFragment fragment = new HistoryFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        // Required empty constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_history, container, false);
+        View view = inflater.inflate(R.layout.fragment_history, container, false);
+        LinearLayout listLayout = view.findViewById(R.id.historyListLayout);
+
+        rideRequestsRef = FirebaseDatabase.getInstance().getReference("rideRequests");
+
+        rideRequestsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                listLayout.removeAllViews();
+                totalPoints = 0; // Reset points
+
+                for (DataSnapshot rideSnap : snapshot.getChildren()) {
+                    RideRequest request = rideSnap.getValue(RideRequest.class);
+                    String rideId = rideSnap.getKey();
+
+                    // Check both confirmations
+                    Boolean driverConfirmed = rideSnap.child("confirmation").child("driver").getValue(Boolean.class);
+                    Boolean riderConfirmed = rideSnap.child("confirmation").child("rider").getValue(Boolean.class);
+
+                    if (request != null && Boolean.TRUE.equals(driverConfirmed) && Boolean.TRUE.equals(riderConfirmed)) {
+                        LinearLayout itemLayout = new LinearLayout(getContext());
+                        itemLayout.setOrientation(LinearLayout.VERTICAL);
+                        itemLayout.setPadding(20, 20, 20, 20);
+
+                        try {
+                            int passengers = Integer.parseInt(request.passengers);
+
+                            String rideType = passengers < 0 ? "Ride Taken" : "Ride Offered";
+
+                            TextView infoText = new TextView(getContext());
+                            infoText.setText(
+                                    rideType + "\n" +
+                                            "ID: " + rideId + "\n" +
+                                            "Date: " + request.date + "\n" +
+                                            "From: " + request.from + "\n" +
+                                            "To: " + request.to + "\n" +
+                                            "Passengers: " + Math.abs(passengers)+ "\n" +
+                                            "Status: Completed"
+                            );
+
+                            itemLayout.addView(infoText);
+                            listLayout.addView(itemLayout);
+
+                            // Divider
+                            View divider = new View(getContext());
+                            divider.setLayoutParams(new LinearLayout.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT, 2));
+                            divider.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+                            listLayout.addView(divider);
+
+                            // Add to points
+                            totalPoints += passengers;
+
+                        } catch (NumberFormatException e) {
+                            // Ignore if passengers is not a number
+                        }
+                    }
+                }
+
+                // Points Summary at the end
+                TextView pointsSummary = new TextView(getContext());
+                pointsSummary.setText("Total Points: " + totalPoints);
+                pointsSummary.setPadding(0, 40, 0, 0);
+                pointsSummary.setTextSize(20);
+                listLayout.addView(pointsSummary);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "Failed to load history", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        return view;
     }
 }

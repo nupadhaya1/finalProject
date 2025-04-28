@@ -57,7 +57,18 @@ public class RideFragment extends Fragment {
         requestRideButton.setOnClickListener(v -> {
             String from = fromInput.getText().toString().trim();
             String to = toInput.getText().toString().trim();
-            String passengers = passengerInput.getText().toString().trim();
+
+            // Passengers Int Valid
+            String passengersInput = passengerInput.getText().toString().trim();
+            int passengersInt;
+            try {
+                passengersInt = Integer.parseInt(passengersInput) * -1;
+            } catch (NumberFormatException e) {
+                Toast.makeText(getContext(), "Passengers must be a valid number!", Toast.LENGTH_SHORT).show();
+                return; // Stop submitting if not a number
+            }
+            String passengers = String.valueOf(passengersInt);
+
             String enteredDate = dateInput.getText().toString().trim(); // <-- Get live value
 
             if (from.isEmpty() || to.isEmpty() || passengers.isEmpty() || enteredDate.isEmpty()) {
