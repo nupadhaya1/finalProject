@@ -76,6 +76,7 @@ public class RideFragment extends Fragment {
                 return;
             }
 
+
             // 2. Use whatever is entered into the date field
             RideRequest rideRequest = new RideRequest(enteredDate, from, to, passengers);
             DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("rideRequests");
