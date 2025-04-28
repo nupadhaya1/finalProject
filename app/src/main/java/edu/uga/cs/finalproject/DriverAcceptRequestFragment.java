@@ -16,6 +16,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+
 public class DriverAcceptRequestFragment extends Fragment {
 
     public DriverAcceptRequestFragment() {
@@ -35,77 +44,96 @@ public class DriverAcceptRequestFragment extends Fragment {
             public void onDataChange(DataSnapshot snapshot) {
                 requestListLayout.removeAllViews(); // Clear previous views
 
+                List<Map.Entry<String, RideRequest>> rideList = new ArrayList<>();
+
                 for (DataSnapshot rideSnap : snapshot.getChildren()) {
-                    DriverOffer ride = rideSnap.getValue(DriverOffer.class);
+                    RideRequest ride = rideSnap.getValue(RideRequest.class);
                     String requestId = rideSnap.getKey();
 
                     if (ride != null && "unaccepted".equalsIgnoreCase(ride.status)) {
-                        // Create container for each request
-                        LinearLayout rideItemLayout = new LinearLayout(getContext());
-                        rideItemLayout.setOrientation(LinearLayout.VERTICAL);
-                        rideItemLayout.setPadding(16, 16, 16, 16);
+                        rideList.add(new AbstractMap.SimpleEntry<>(requestId, ride));
+                    }
+                }
 
-                        // TextView for ride details
-                        TextView rideDetails = new TextView(getContext());
-                        rideDetails.setTextColor(getResources().getColor(android.R.color.white));
-                        rideDetails.setText(
-                                "Request ID: " + requestId +
-                                        "\nDate: " + ride.date +
-                                        "\nFrom: " + ride.from +
-                                        "\nTo: " + ride.to +
-                                        "\nPassengers: " + ride.passengers +
-                                        "\nStatus: " + ride.status);
+                // Sort the list by date
+                Collections.sort(rideList, (entry1, entry2) -> {
+                    try {
+                        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
+                        Date date1 = sdf.parse(entry1.getValue().date);
+                        Date date2 = sdf.parse(entry2.getValue().date);
+                        return date1.compareTo(date2); // Ascending order
+                    } catch (Exception e) {
+                        return 0; // If parsing fails, keep original order
+                    }
+                });
 
-                        // Button to accept
-                        Button acceptButton = new Button(getContext());
-                        acceptButton.setText("Accept Ride");
-                        acceptButton.setOnClickListener(v -> {
-                            dbRef.child(requestId).child("status").setValue("accepted")
-                                    .addOnSuccessListener(aVoid -> {
-                                        Toast.makeText(getContext(), "Ride offer accepted!", Toast.LENGTH_SHORT).show();
+                // Now display the sorted rides
+                for (Map.Entry<String, RideRequest> entry : rideList) {
+                    String requestId = entry.getKey();
+                    RideRequest ride = entry.getValue();
 
-                                        Fragment activeTripFragment = new ActiveTripDriver();
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("rideId", requestId); // pass rideId
-                                        activeTripFragment.setArguments(bundle);
+                    // Create container for each request
+                    LinearLayout rideItemLayout = new LinearLayout(getContext());
+                    rideItemLayout.setOrientation(LinearLayout.VERTICAL);
+                    rideItemLayout.setPadding(16, 16, 16, 16);
 
-                                        getParentFragmentManager().beginTransaction()
-                                                .replace(R.id.fragmentContainerView, activeTripFragment)
-                                                .addToBackStack(null)
-                                                .commit();
-                                    })
-                                    .addOnFailureListener(e -> Toast
-                                            .makeText(getContext(), "Failed to accept ride offer", Toast.LENGTH_SHORT)
-                                            .show());
-                        });
+                    // TextView for ride details
+                    TextView rideDetails = new TextView(getContext());
+                    rideDetails.setTextColor(getResources().getColor(android.R.color.white));
+                    rideDetails.setText(
+                            "Request ID: " + requestId +
+                                    "\nDate: " + ride.date +
+                                    "\nFrom: " + ride.from +
+                                    "\nTo: " + ride.to +
+                                    "\nPassengers: " + ride.passengers +
+                                    "\nStatus: " + ride.status);
 
-                        // Add divider
-                        View divider = new View(getContext());
-                        LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT, 1);
-                        dividerParams.setMargins(0, 16, 0, 16);
-                        divider.setLayoutParams(dividerParams);
-                        divider.setBackgroundColor(getResources().getColor(android.R.color.white));
+                    // Button to accept
+                    Button acceptButton = new Button(getContext());
+                    acceptButton.setText("Accept Ride");
+                    acceptButton.setOnClickListener(v -> {
+                        dbRef.child(requestId).child("status").setValue("accepted")
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(getContext(), "Ride offer accepted!", Toast.LENGTH_SHORT).show();
 
-                        requestListLayout.addView(divider);
+                                    Fragment activeTripFragment = new ActiveTripDriver();
+                                    Bundle bundle = new Bundle();
+                                    bundle.putString("rideId", requestId); // pass rideId
+                                    activeTripFragment.setArguments(bundle);
 
-                        // Add views
-                        rideItemLayout.addView(rideDetails);
-                        rideItemLayout.addView(acceptButton);
-                        requestListLayout.addView(rideItemLayout);
-                    } // if statement
+                                    getParentFragmentManager().beginTransaction()
+                                            .replace(R.id.fragmentContainerView, activeTripFragment)
+                                            .addToBackStack(null)
+                                            .commit();
+                                })
+                                .addOnFailureListener(e -> Toast
+                                        .makeText(getContext(), "Failed to accept ride offer", Toast.LENGTH_SHORT)
+                                        .show());
+                    });
 
-                } // for loop
-            } // onDataChange
+                    // Divider
+                    View divider = new View(getContext());
+                    LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT, 1);
+                    dividerParams.setMargins(0, 16, 0, 16);
+                    divider.setLayoutParams(dividerParams);
+                    divider.setBackgroundColor(getResources().getColor(android.R.color.white));
+
+                    // Add views
+                    requestListLayout.addView(divider);
+                    rideItemLayout.addView(rideDetails);
+                    rideItemLayout.addView(acceptButton);
+                    requestListLayout.addView(rideItemLayout);
+                }
+            }
 
             @Override
             public void onCancelled(DatabaseError error) {
                 Toast.makeText(getContext(), "Failed to load ride requests", Toast.LENGTH_SHORT).show();
-            } // onCancelled
+            }
         });
 
-        // return view
         return view;
-    } // onCreateView
+    }
 
-} // DriverAcceptRequestFragment
+}
