@@ -69,7 +69,7 @@ public class LogInScreen extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
-    }
+    } // onCreate
 
     private void signIn(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
@@ -91,8 +91,8 @@ public class LogInScreen extends AppCompatActivity {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(LogInScreen.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                        }
-                    }
+                        } // if else statement
+                    } // onComplete
                 });
-    }
-}
+    } // SignIn
+} // LoginScreen

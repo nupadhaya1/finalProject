@@ -36,11 +36,12 @@ public class RideFragment extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
+    } // Ride Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // create a view
         View view = inflater.inflate(R.layout.fragment_ride, container, false);
 
         // Get references to inputs
@@ -110,7 +111,7 @@ public class RideFragment extends Fragment {
 
 
 
-
+        // return view
         return view;
-    }
-}
+    } // onCreateView
+} // RideFragment

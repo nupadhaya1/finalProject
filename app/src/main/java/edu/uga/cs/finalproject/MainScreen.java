@@ -73,6 +73,7 @@ public class MainScreen extends AppCompatActivity {
     private void navigateToFragment(int itemId) {
         Fragment selectedFragment = null;
 
+        // check to see which fragment is the latest
         if (itemId == R.id.nav_driver) {
             selectedFragment = new RideFragment();
         } else if (itemId == R.id.nav_customer) {
@@ -83,25 +84,28 @@ public class MainScreen extends AppCompatActivity {
             selectedFragment = new HistoryFragment();
         } else if (itemId == R.id.nav_about) {
             selectedFragment = new AboutFragment();
-        }
+        } // end of if else
 
+        // if fragment is null
         if (selectedFragment != null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragmentContainerView, selectedFragment)
                     .commit();
-        }
-    }
+        } // if statement
+    } // navigateToFragment
 
     // Inflate the logout menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
-    }
+    } // onCreateOptionsMenu
 
     // Handle logout
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
+        // log out logic
         if (item.getItemId() == R.id.action_logout) {
             FirebaseAuth.getInstance().signOut(); // Logs the user out of Firebase
             Toast.makeText(this, "Logged out", Toast.LENGTH_SHORT).show();
@@ -110,8 +114,10 @@ public class MainScreen extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             return true;
-        }
+        } // if statement
+
+        // return
         return super.onOptionsItemSelected(item);
-    }
+    } // onOptionsItemSelected
 
 } // MainScreen

@@ -136,11 +136,14 @@ public class RideWaitForDriverFragment extends Fragment {
                             })
                             .addOnFailureListener(e ->
                                     Toast.makeText(getContext(), "Failed to cancel request", Toast.LENGTH_SHORT).show());
-                }
+                } // if statement
             });
 
 
+            // button listener to move to next page
             updateButton.setOnClickListener(v -> {
+
+                // if ride ref is not null, set up new fragment
                 if (rideRef != null) {
                     Bundle bundle = new Bundle();
                     bundle.putString("requestId", args.getString(ARG_RIDE_ID)); // Safely pass rideId
@@ -152,7 +155,7 @@ public class RideWaitForDriverFragment extends Fragment {
                             .replace(R.id.fragmentContainerView, actualUpdateFragment)
                             .addToBackStack(null)
                             .commit();
-                }
+                } // if statement
             });
 
         } // if statement

@@ -94,6 +94,6 @@ public class ActiveTripDriver extends Fragment {
                 })
                 .addOnFailureListener(
                         e -> Toast.makeText(getContext(), "Failed to confirm drive end", Toast.LENGTH_SHORT).show());
-    }
+    } // confirmEndOfTrip
 
 } // ActiveTripDriver

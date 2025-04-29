@@ -124,16 +124,16 @@ public class DriverAcceptRequestFragment extends Fragment {
                     rideItemLayout.addView(rideDetails);
                     rideItemLayout.addView(acceptButton);
                     requestListLayout.addView(rideItemLayout);
-                }
-            }
+                } // for loop
+            } // onDataChange
 
             @Override
             public void onCancelled(DatabaseError error) {
                 Toast.makeText(getContext(), "Failed to load ride requests", Toast.LENGTH_SHORT).show();
-            }
+            } // onCancelled
         });
 
         return view;
-    }
+    } // onCreateView
 
-}
+} // DriverAcceptRequestFragment

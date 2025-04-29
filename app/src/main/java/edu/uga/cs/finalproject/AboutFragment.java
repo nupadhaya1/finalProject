@@ -44,15 +44,16 @@ public class AboutFragment extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
+    } // AboutFragment
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // check arguments are null
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        } // if statement
     } // onCreate
 
     @Override
@@ -61,4 +62,5 @@ public class AboutFragment extends Fragment {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_about, container, false);
     } // onCreateView
+
 }// AboutFragment

@@ -34,11 +34,16 @@ public class RiderAcceptRequestFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
+        // create a View
         View view = inflater.inflate(R.layout.fragment_rider_accept_request, container, false);
 
+        // create and initialize a linear layout
         LinearLayout requestListLayout = view.findViewById(R.id.riderRequestListLayout);
+
+        // create and initialize database reference
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("driveOffers");
 
+        // add a database reference
         dbRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -46,25 +51,36 @@ public class RiderAcceptRequestFragment extends Fragment {
 
                 List<Map.Entry<String, DriverOffer>> offerList = new ArrayList<>();
 
+                // Loop through each ride offer snapshot retrieved from Firebase
                 for (DataSnapshot rideSnap : snapshot.getChildren()) {
+                    // Convert the snapshot into a DriverOffer object
                     DriverOffer offer = rideSnap.getValue(DriverOffer.class);
                     String offerId = rideSnap.getKey();
 
+                    // Add the offer to the list only if its status is "unaccepted"
                     if (offer != null && "unaccepted".equalsIgnoreCase(offer.status)) {
                         offerList.add(new AbstractMap.SimpleEntry<>(offerId, offer));
-                    }
-                }
+
+                    } // if statement
+
+                } // for loop
 
                 // Sort the offers by date
                 Collections.sort(offerList, (entry1, entry2) -> {
+
+                    // try and catch
                     try {
                         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
                         Date date1 = sdf.parse(entry1.getValue().date);
                         Date date2 = sdf.parse(entry2.getValue().date);
-                        return date1.compareTo(date2); // Ascending order
+
+                        // return
+                        return date1.compareTo(date2);
+
                     } catch (Exception e) {
-                        return 0; // If parsing fails, do not crash
-                    }
+
+                        return 0;
+                    } // try catch
                 });
 
                 // Display the sorted offers
@@ -118,15 +134,18 @@ public class RiderAcceptRequestFragment extends Fragment {
                     rideItemLayout.addView(rideDetails);
                     rideItemLayout.addView(acceptButton);
                     requestListLayout.addView(rideItemLayout);
-                }
-            }
+                } // for loop
+            } // onDataChange
 
             @Override
             public void onCancelled(DatabaseError error) {
                 Toast.makeText(getContext(), "Failed to load ride offers", Toast.LENGTH_SHORT).show();
-            }
+            } // onCancelled
         });
 
+        // return view
         return view;
-    }
-}
+
+    } // onCreateView
+
+} // RiderAcceptRequestFragment

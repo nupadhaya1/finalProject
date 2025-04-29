@@ -109,34 +109,36 @@ public class ProfileFragment extends Fragment {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     int points = 0;
 
+                    // for loop for points system
                     for (DataSnapshot rideSnap : snapshot.getChildren()) {
                         RideRequest request = rideSnap.getValue(RideRequest.class);
 
                         Boolean driverConfirmed = rideSnap.child("confirmation").child("driver").getValue(Boolean.class);
                         Boolean riderConfirmed = rideSnap.child("confirmation").child("rider").getValue(Boolean.class);
 
+                         // if the ride was both confirm increment points
                         if (request != null && Boolean.TRUE.equals(driverConfirmed) && Boolean.TRUE.equals(riderConfirmed)) {
                             try {
                                 int passengers = Integer.parseInt(request.passengers);
                                 points += passengers;
                             } catch (NumberFormatException e) {
                                 // Ignore
-                            }
-                        }
-                    }
+                            } // try catch
+                        } // if statement
+                    } // for loop
 
                     // After calculation, update the text
                     userPointsText.setText("Total Points: " + points);
-                }
+                } // onDataChange
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                     Toast.makeText(getContext(), "Failed to load points", Toast.LENGTH_SHORT).show();
-                }
+                } // on cancelled
             });
 
             return view;
-        }
+        } // onCreateView
 
 
     } // ProfileFragment

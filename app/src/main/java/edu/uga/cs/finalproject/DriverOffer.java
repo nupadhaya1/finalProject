@@ -12,13 +12,14 @@ public class DriverOffer {
 
     }
 
+    // Constructor for new driver offers with default status "unaccepted"
     public DriverOffer(String date, String from, String to, String passengers) {
         this.date = date;
         this.from = from;
         this.to = to;
         this.passengers = passengers;
         this.status = "unaccepted";
-    }
+    } // DriverOffer
 
     public DriverOffer(String date, String from, String to, String passengers, String status) {
         this.date = date;
@@ -26,5 +27,5 @@ public class DriverOffer {
         this.to = to;
         this.passengers = passengers;
         this.status = status;
-    }
-}
+    } // DriverOffer
+} // DriverOffer

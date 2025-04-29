@@ -136,7 +136,7 @@ public class RegisterScreen extends AppCompatActivity {
                                                 Intent intent = new Intent(RegisterScreen.this, LogInScreen.class);
                                                 startActivity(intent);
                                                 finish(); // Close the register activity
-                                            }
+                                            } // onComplete
                                         });
                             // if the creation of the user account fails
                             } else {
@@ -158,13 +158,13 @@ public class RegisterScreen extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(RegisterScreen.this, "Registration failed: " + e.getMessage(),
                                                 Toast.LENGTH_SHORT).show();
-                                    }
+                                    } // end of if else
                                 } catch (Exception e) {
                                     Toast.makeText(RegisterScreen.this, "Registration failed: " + e.getMessage(),
                                             Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
+                                } // end of try catch
+                            } // end of if else
+                        } // end of on Complete
                     });
             // [END create user with email]
 

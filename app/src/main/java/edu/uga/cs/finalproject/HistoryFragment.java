@@ -110,9 +110,12 @@ public class HistoryFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getContext(), "Failed to load history", Toast.LENGTH_SHORT).show();
-            }
+            } // onCancelled
         });
 
+        // return view
         return view;
-    }
-}
+
+    } // onCreateView
+
+} // HistoryFragment

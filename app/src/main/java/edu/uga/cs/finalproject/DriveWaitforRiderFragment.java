@@ -125,6 +125,8 @@ public class DriveWaitforRiderFragment extends Fragment {
 
             // add listener to  button
             cancelButton.setOnClickListener(v -> {
+
+                // if ride ref is not null, add a listener and replace fragment
                 if (rideRef != null) {
                     rideRef.removeValue()
                             .addOnSuccessListener(aVoid -> {
@@ -137,11 +139,12 @@ public class DriveWaitforRiderFragment extends Fragment {
                             })
                             .addOnFailureListener(e -> Toast
                                     .makeText(getContext(), "Failed to cancel ride offer", Toast.LENGTH_SHORT).show());
-                }
+                } // if statement
             });
 
 
             updateButton.setOnClickListener(v -> {
+                // if update button is pressed pull up update fragment
                 if (rideRef != null) {
                     Bundle bundle = new Bundle();
                     bundle.putString("offerId", args.getString(ARG_RIDE_ID)); // Pass offerId safely
@@ -153,7 +156,7 @@ public class DriveWaitforRiderFragment extends Fragment {
                             .replace(R.id.fragmentContainerView, actualUpdateOfferFragment)
                             .addToBackStack(null)
                             .commit();
-                }
+                } // if statement
             });
 
         } // if statement
@@ -169,10 +172,14 @@ public class DriveWaitforRiderFragment extends Fragment {
         MainScreen.currentWaitingRef = null;
 
         super.onDestroyView();
+
         // if rider is null and status listener is null
         if (rideRef != null && statusListener != null) {
+
             rideRef.removeEventListener(statusListener);
+
         } // if statement
+
     } // onDestroyView
 
 } // DriverWaitForRideFragment
