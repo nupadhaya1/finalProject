@@ -15,43 +15,68 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+/**
+ * Fragment that displays all unaccepted ride requests and allows the user
+ * to select one for updating. Transitions to ActualUpdateFragment on selection.
+ */
 public class UpdateRideRequest extends Fragment {
 
+    /**
+     * Required empty public constructor for fragment instantiation.
+     */
     public UpdateRideRequest() {
         // Required empty public constructor
     }
 
+    /**
+     * Called to create the view hierarchy for this fragment.
+     * Inflates the request layout, reads ride requests from Firebase,
+     * and populates only those with status "unaccepted".
+     * Sets up click listeners to navigate to ActualUpdateFragment.
+     *
+     * @param inflater           LayoutInflater to inflate fragment views
+     * @param container          Parent ViewGroup for the fragment
+     * @param savedInstanceState Bundle for saved state, if any
+     * @return The root view of the fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // create the view
-        View view = inflater.inflate(R.layout.fragment_update_ride_request, container, false); // reuse the layout
+            Bundle savedInstanceState) {
+        // Inflate the fragment layout
+        View view = inflater.inflate(R.layout.fragment_update_ride_request, container, false);
 
-        // create and initialize linear layout
+        // Find and initialize the LinearLayout for request items
         LinearLayout requestListLayout = view.findViewById(R.id.updateRequestListLayout);
 
-        // initialize database reference
+        // Reference the "rideRequests" node in Firebase
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("rideRequests");
 
-        // add listener to database reference
+        // Listen for data changes on rideRequests
         dbRef.addValueEventListener(new ValueEventListener() {
+            /**
+             * Called when data at the reference changes.
+             * Iterates through each ride request and displays unaccepted ones.
+             *
+             * @param snapshot DataSnapshot of rideRequests node
+             */
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                requestListLayout.removeAllViews(); // Clear previous views
+                // Clear previous views before updating
+                requestListLayout.removeAllViews();
 
-                // for loop for displaying
+                // Loop through each ride entry
                 for (DataSnapshot rideSnap : snapshot.getChildren()) {
                     RideRequest ride = rideSnap.getValue(RideRequest.class);
                     String requestId = rideSnap.getKey();
 
-                    // check only unaccepted rides
-                    if (ride != null && ride.status != null && ride.status.equalsIgnoreCase("unaccepted")) {
-                        // Create container for each request
+                    if (ride != null && ride.status != null
+                            && ride.status.equalsIgnoreCase("unaccepted")) {
+                        // Create container layout for a single ride item
                         LinearLayout rideItemLayout = new LinearLayout(getContext());
                         rideItemLayout.setOrientation(LinearLayout.VERTICAL);
                         rideItemLayout.setPadding(16, 16, 16, 16);
 
-                        // TextView for ride details
+                        // TextView showing ride details
                         TextView rideDetails = new TextView(getContext());
                         rideDetails.setTextColor(getResources().getColor(android.R.color.white));
                         rideDetails.setText(
@@ -62,9 +87,10 @@ public class UpdateRideRequest extends Fragment {
                                         "\nPassengers: " + Math.abs(Integer.parseInt(ride.passengers)) +
                                         "\nStatus: " + ride.status);
 
+                        // Add details view to layout
                         rideItemLayout.addView(rideDetails);
 
-                        // Set onClick to go to ActualUpdateOfferFragment
+                        // Navigate to ActualUpdateFragment when clicked
                         rideItemLayout.setOnClickListener(v -> {
                             Bundle bundle = new Bundle();
                             bundle.putString("requestId", requestId);
@@ -79,27 +105,34 @@ public class UpdateRideRequest extends Fragment {
                                     .commit();
                         });
 
+                        // Add ride item layout to parent
                         requestListLayout.addView(rideItemLayout);
 
-                        // Optional: Divider
+                        // Divider between items
                         View divider = new View(getContext());
-                        LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                                 ViewGroup.LayoutParams.MATCH_PARENT, 1);
-                        dividerParams.setMargins(0, 16, 0, 16);
-                        divider.setLayoutParams(dividerParams);
+                        params.setMargins(0, 16, 0, 16);
+                        divider.setLayoutParams(params);
                         divider.setBackgroundColor(getResources().getColor(android.R.color.white));
                         requestListLayout.addView(divider);
-                    } // if statement
-                } // for loop
-            } // onDataChange
+                    }
+                }
+            }
 
+            /**
+             * Called if the database read is cancelled or fails.
+             * Shows an error toast.
+             *
+             * @param error DatabaseError detailing the failure
+             */
             @Override
             public void onCancelled(DatabaseError error) {
                 Toast.makeText(getContext(), "Failed to load ride requests", Toast.LENGTH_SHORT).show();
-            } // on Cancelled
+            }
         });
 
-        // return the view
+        // Return the inflated and populated view
         return view;
-    } // UpdateRideRequest
+    }
 }

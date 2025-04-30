@@ -1,15 +1,20 @@
+/**
+ * Fragment to display the user's profile information and accumulated ride points.
+ * This fragment shows the current user's display name and email retrieved
+ * from FirebaseAuth, and calculates total points based on completed ride
+ * confirmations stored in Firebase Realtime Database.
+ */
 package edu.uga.cs.finalproject;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,37 +25,30 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * A simple {@link Fragment} subclass that displays user profile details.
  */
 public class ProfileFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    private int totalPoints = 0;
-
-
+    /**
+     * Required empty public constructor.
+     */
     public ProfileFragment() {
         // Required empty public constructor
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * Factory method to create a new instance of ProfileFragment.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
+     * @param param1 First parameter (unused placeholder).
+     * @param param2 Second parameter (unused placeholder).
      * @return A new instance of fragment ProfileFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static ProfileFragment newInstance(String param1, String param2) {
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
@@ -60,85 +58,86 @@ public class ProfileFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Called to do initial creation of the fragment.
+     * Retrieves any passed arguments.
+     *
+     * @param savedInstanceState If non-null, fragment is being re-constructed.
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     * Inflates the layout, displays user name and email, and computes total points
+     * based on confirmed rides from Firebase Realtime Database.
+     *
+     * @param inflater           LayoutInflater to inflate views.
+     * @param container          Parent view that the fragment's UI should attach
+     *                           to.
+     * @param savedInstanceState If non-null, fragment is being re-created.
+     * @return The root View for the fragment's UI.
+     */
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+            Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            // create a view
-            View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        // TextViews for displaying user info and points
+        TextView userNameText = view.findViewById(R.id.userNameText);
+        TextView userEmailText = view.findViewById(R.id.userEmailText);
+        TextView userPointsText = view.findViewById(R.id.userPoints);
 
-            // initialize the text
-            TextView userNameText = view.findViewById(R.id.userNameText);
-            TextView userEmailText = view.findViewById(R.id.userEmailText);
-            TextView userPointsText = view.findViewById(R.id.userPoints);
+        // Get current Firebase user
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            userEmailText.setText("Email: " + user.getEmail());
+            String name = user.getDisplayName();
+            userNameText.setText(name != null && !name.isEmpty()
+                    ? "Name: " + name
+                    : "Name not set");
+        }
 
-            // get the user
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        // Reference to rideRequests in Firebase Database
+        DatabaseReference rideRequestsRef = FirebaseDatabase
+                .getInstance().getReference("rideRequests");
 
-            if (user != null) {
-                // Set email
-                userEmailText.setText("Email: " + user.getEmail());
-
-                // Set display name (if available)
-                String name = user.getDisplayName();
-                if (name != null && !name.isEmpty()) {
-                    userNameText.setText("Name: " + name);
-                } else {
-                    userNameText.setText("Name not set");
+        // Listen once to compute total points
+        rideRequestsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int points = 0;
+                for (DataSnapshot rideSnap : snapshot.getChildren()) {
+                    RideRequest request = rideSnap.getValue(RideRequest.class);
+                    Boolean driverConfirmed = rideSnap.child("confirmation")
+                            .child("driver").getValue(Boolean.class);
+                    Boolean riderConfirmed = rideSnap.child("confirmation")
+                            .child("rider").getValue(Boolean.class);
+                    if (request != null
+                            && Boolean.TRUE.equals(driverConfirmed)
+                            && Boolean.TRUE.equals(riderConfirmed)) {
+                        try {
+                            points += Integer.parseInt(request.passengers);
+                        } catch (NumberFormatException e) {
+                            // Ignore invalid number format
+                        }
+                    }
                 }
+                userPointsText.setText("Total Points: " + points);
             }
 
-            // Initialize points
-            int totalPoints = 0;
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "Failed to load points", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-            // get the database
-            DatabaseReference rideRequestsRef = FirebaseDatabase.getInstance().getReference("rideRequests");
-
-            rideRequestsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    int points = 0;
-
-                    // for loop for points system
-                    for (DataSnapshot rideSnap : snapshot.getChildren()) {
-                        RideRequest request = rideSnap.getValue(RideRequest.class);
-
-                        Boolean driverConfirmed = rideSnap.child("confirmation").child("driver").getValue(Boolean.class);
-                        Boolean riderConfirmed = rideSnap.child("confirmation").child("rider").getValue(Boolean.class);
-
-                         // if the ride was both confirm increment points
-                        if (request != null && Boolean.TRUE.equals(driverConfirmed) && Boolean.TRUE.equals(riderConfirmed)) {
-                            try {
-                                int passengers = Integer.parseInt(request.passengers);
-                                points += passengers;
-                            } catch (NumberFormatException e) {
-                                // Ignore
-                            } // try catch
-                        } // if statement
-                    } // for loop
-
-                    // After calculation, update the text
-                    userPointsText.setText("Total Points: " + points);
-                } // onDataChange
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(getContext(), "Failed to load points", Toast.LENGTH_SHORT).show();
-                } // on cancelled
-            });
-
-            return view;
-        } // onCreateView
-
-
-    } // ProfileFragment
+        return view;
+    }
+}

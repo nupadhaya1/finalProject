@@ -25,12 +25,38 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * A Fragment that retrieves all unaccepted ride requests from Firebase Realtime
+ * Database,
+ * displays them in a sorted list by date, and allows the driver to accept a
+ * ride.
+ */
 public class DriverAcceptRequestFragment extends Fragment {
 
+    /**
+     * Default public constructor. Required for Fragment subclass.
+     */
     public DriverAcceptRequestFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Inflates the fragment layout, sets up a listener on the "rideRequests" node
+     * in Firebase,
+     * and populates a LinearLayout with ride requests sorted by date.
+     * Each request entry shows details and an "Accept Ride" button which, when
+     * clicked,
+     * updates the request status to "accepted" and navigates to the
+     * ActiveTripDriver fragment.
+     *
+     * @param inflater           The LayoutInflater object that can be used to
+     *                           inflate any views in the fragment
+     * @param container          If non-null, this is the parent view that the
+     *                           fragment's UI should be attached to
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     *                           from a previous saved state
+     * @return The root View for the fragment's UI
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
@@ -85,7 +111,7 @@ public class DriverAcceptRequestFragment extends Fragment {
                                     "\nDate: " + ride.date +
                                     "\nFrom: " + ride.from +
                                     "\nTo: " + ride.to +
-                                    "\nPassengers: " + Math.abs(Integer.parseInt(ride.passengers))+
+                                    "\nPassengers: " + Math.abs(Integer.parseInt(ride.passengers)) +
                                     "\nStatus: " + ride.status);
 
                     // Button to accept

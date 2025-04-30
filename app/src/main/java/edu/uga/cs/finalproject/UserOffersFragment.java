@@ -1,4 +1,5 @@
 package edu.uga.cs.finalproject;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,44 +17,73 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+/**
+ * Fragment that retrieves and displays a list of driver offers from Firebase
+ * Realtime Database.
+ * Allows users to cancel individual driving offers.
+ */
 public class UserOffersFragment extends Fragment {
 
+    /**
+     * Reference to the "driveOffers" node in Firebase Realtime Database.
+     */
     private DatabaseReference driveOffersRef;
 
+    /**
+     * Required empty public constructor for fragment instantiation.
+     */
     public UserOffersFragment() {
         // Required empty constructor
     }
 
+    /**
+     * Called to create the fragment's view hierarchy.
+     * Inflates the layout, initializes the Firebase reference, and populates the
+     * list of drive offers.
+     *
+     * @param inflater           LayoutInflater used to inflate views in the
+     *                           fragment
+     * @param container          The parent view to attach the fragment UI to
+     * @param savedInstanceState Bundle containing saved state, if any
+     * @return The root view of the fragment
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // create View
+            Bundle savedInstanceState) {
+        // Inflate the fragment's layout
         View view = inflater.inflate(R.layout.fragment_user_offers, container, false);
 
-       // create and initialize linearlayout
+        // Find and initialize the LinearLayout container for offers
         LinearLayout listLayout = view.findViewById(R.id.rideOffersListLayout);
 
-        // initialize database reference
+        // Initialize Firebase database reference to the "driveOffers" node
         driveOffersRef = FirebaseDatabase.getInstance().getReference("driveOffers");
 
-        // add listener to the database reference
+        // Read data once from the database
         driveOffersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            /**
+             * Called when data is successfully read from the database.
+             * Iterates through driver offer entries and dynamically creates list items.
+             *
+             * @param snapshot DataSnapshot containing all child nodes under "driveOffers"
+             */
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                // Clear existing views
                 listLayout.removeAllViews();
 
-                // for loop for displaying
+                // Loop through each driver offer
                 for (DataSnapshot rideSnap : snapshot.getChildren()) {
                     DriverOffer offer = rideSnap.getValue(DriverOffer.class);
                     String offerId = rideSnap.getKey();
 
-                    // check if offer isnt null
                     if (offer != null) {
+                        // Create layout for a single offer item
                         LinearLayout itemLayout = new LinearLayout(getContext());
                         itemLayout.setOrientation(LinearLayout.VERTICAL);
                         itemLayout.setPadding(20, 20, 20, 20);
 
-                        // create text input
+                        // Display offer details
                         TextView infoText = new TextView(getContext());
                         infoText.setText(
                                 "ID: " + offerId + "\n" +
@@ -61,45 +91,52 @@ public class UserOffersFragment extends Fragment {
                                         "From: " + offer.from + "\n" +
                                         "To: " + offer.to + "\n" +
                                         "Passengers: " + Math.abs(Integer.parseInt(offer.passengers)) + "\n" +
-                                        "Status: " + offer.status
-                        );
+                                        "Status: " + offer.status);
 
-                        // create cancel button
+                        // Create Cancel Offer button
                         Button cancelButton = new Button(getContext());
                         cancelButton.setText("Cancel Offer");
                         cancelButton.setOnClickListener(v -> {
+                            // Remove this offer from database
                             driveOffersRef.child(offerId).removeValue()
-                                    .addOnSuccessListener(aVoid ->
-                                            Toast.makeText(getContext(), "Offer Canceled", Toast.LENGTH_SHORT).show())
-                                    .addOnFailureListener(e ->
-                                            Toast.makeText(getContext(), "Failed to cancel offer", Toast.LENGTH_SHORT).show());
+                                    .addOnSuccessListener(aVoid -> Toast
+                                            .makeText(getContext(), "Offer canceled", Toast.LENGTH_SHORT).show())
+                                    .addOnFailureListener(e -> Toast
+                                            .makeText(getContext(), "Failed to cancel offer", Toast.LENGTH_SHORT)
+                                            .show());
 
+                            // Hide item on success
                             itemLayout.setVisibility(View.GONE);
                         });
 
+                        // Add views to item layout
                         itemLayout.addView(infoText);
                         itemLayout.addView(cancelButton);
 
+                        // Add item and divider to parent layout
                         listLayout.addView(itemLayout);
-
-                        // Optional divider
                         View divider = new View(getContext());
                         divider.setLayoutParams(new LinearLayout.LayoutParams(
                                 ViewGroup.LayoutParams.MATCH_PARENT, 2));
                         divider.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
                         listLayout.addView(divider);
-                    } // if statement
-                } // forloop
-            } // onDataChange
+                    }
+                }
+            }
 
+            /**
+             * Called if the database read is cancelled or fails.
+             * Displays an error toast to the user.
+             *
+             * @param error DatabaseError containing details of the failure
+             */
             @Override
             public void onCancelled(DatabaseError error) {
                 Toast.makeText(getContext(), "Failed to load drive offers", Toast.LENGTH_SHORT).show();
-            } // onCancelled
+            }
         });
 
-        // return the view
+        // Return the fully constructed view
         return view;
-    } // onCreateView
-
-} // UserOffersFragment
+    }
+}

@@ -25,39 +25,66 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * Fragment that displays all unaccepted driver offers to the rider, sorted by
+ * date,
+ * and allows the rider to accept an offer. Upon acceptance, the fragment
+ * transitions
+ * to ActiveTripRider to show the active trip details.
+ */
 public class RiderAcceptRequestFragment extends Fragment {
 
+    /**
+     * Required empty public constructor for fragment instantiation.
+     */
     public RiderAcceptRequestFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * Inflates the layout, retrieves drive offers from Firebase, filters and sorts
+     * them,
+     * and dynamically populates UI elements for each offer. Sets up listeners for
+     * accepting offers.
+     *
+     * @param inflater           LayoutInflater to inflate fragment views
+     * @param container          Parent view that the fragment's UI should attach to
+     * @param savedInstanceState Bundle containing saved state, if any
+     * @return The root View for the fragment's UI
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        // create a View
+        // Inflate the fragment layout
         View view = inflater.inflate(R.layout.fragment_rider_accept_request, container, false);
 
-        // create and initialize a linear layout
+        // LinearLayout container for listing ride offers
         LinearLayout requestListLayout = view.findViewById(R.id.riderRequestListLayout);
-
-        // create and initialize database reference
+        // Reference to the "driveOffers" node in Firebase Realtime Database
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("driveOffers");
 
-        // add a database reference
+        // Attach a listener to read drive offers
         dbRef.addValueEventListener(new ValueEventListener() {
+            /**
+             * Called when driveOffers data changes. Clears existing views, collects
+             * unaccepted offers,
+             * sorts them by date, and creates UI entries with accept buttons.
+             *
+             * @param snapshot DataSnapshot containing all child nodes under "driveOffers"
+             */
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                requestListLayout.removeAllViews(); // Clear previous views
+                // Clear previous views
+                requestListLayout.removeAllViews();
 
+                // List to hold offer entries
                 List<Map.Entry<String, DriverOffer>> offerList = new ArrayList<>();
 
-                // Loop through each ride offer snapshot retrieved from Firebase
+                // Filter unaccepted offers
                 for (DataSnapshot rideSnap : snapshot.getChildren()) {
                     // Convert the snapshot into a DriverOffer object
                     DriverOffer offer = rideSnap.getValue(DriverOffer.class);
                     String offerId = rideSnap.getKey();
-
-                    // Add the offer to the list only if its status is "unaccepted"
                     if (offer != null && "unaccepted".equalsIgnoreCase(offer.status)) {
                         offerList.add(new AbstractMap.SimpleEntry<>(offerId, offer));
 
@@ -65,30 +92,24 @@ public class RiderAcceptRequestFragment extends Fragment {
 
                 } // for loop
 
-                // Sort the offers by date
-                Collections.sort(offerList, (entry1, entry2) -> {
-
-                    // try and catch
+                // Sort offers by date (format: MM/dd/yyyy)
+                Collections.sort(offerList, (e1, e2) -> {
                     try {
                         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.getDefault());
-                        Date date1 = sdf.parse(entry1.getValue().date);
-                        Date date2 = sdf.parse(entry2.getValue().date);
-
-                        // return
-                        return date1.compareTo(date2);
-
-                    } catch (Exception e) {
-
+                        Date d1 = sdf.parse(e1.getValue().date);
+                        Date d2 = sdf.parse(e2.getValue().date);
+                        return d1.compareTo(d2);
+                    } catch (Exception ex) {
                         return 0;
-                    } // try catch
+                    }
                 });
 
-                // Display the sorted offers
+                // Create UI elements for each sorted offer
                 for (Map.Entry<String, DriverOffer> entry : offerList) {
                     String offerId = entry.getKey();
                     DriverOffer offer = entry.getValue();
 
-                    // Create container for each offer
+                    // Container for a single offer
                     LinearLayout rideItemLayout = new LinearLayout(getContext());
                     rideItemLayout.setOrientation(LinearLayout.VERTICAL);
                     rideItemLayout.setPadding(16, 16, 16, 16);
@@ -104,25 +125,26 @@ public class RiderAcceptRequestFragment extends Fragment {
                                     "\nPassengers: " + offer.passengers +
                                     "\nStatus: " + offer.status);
 
-                    // Button to accept
+                    // Button to accept the offer
                     Button acceptButton = new Button(getContext());
                     acceptButton.setText("Accept Offer");
                     acceptButton.setOnClickListener(v -> {
+                        // Update status in Firebase
                         dbRef.child(offerId).child("status").setValue("accepted");
                         Toast.makeText(getContext(), "Ride offer accepted!", Toast.LENGTH_SHORT).show();
 
-                        Fragment activeTripFragment = new ActiveTripRider();
+                        // Navigate to ActiveTripRider
+                        Fragment activeTrip = new ActiveTripRider();
                         Bundle bundle = new Bundle();
                         bundle.putString("rideId", offerId);
-                        activeTripFragment.setArguments(bundle);
-
+                        activeTrip.setArguments(bundle);
                         getParentFragmentManager().beginTransaction()
-                                .replace(R.id.fragmentContainerView, activeTripFragment)
+                                .replace(R.id.fragmentContainerView, activeTrip)
                                 .addToBackStack(null)
                                 .commit();
                     });
 
-                    // Divider
+                    // Divider view
                     View divider = new View(getContext());
                     LinearLayout.LayoutParams dividerParams = new LinearLayout.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT, 1);
@@ -130,6 +152,7 @@ public class RiderAcceptRequestFragment extends Fragment {
                     divider.setLayoutParams(dividerParams);
                     divider.setBackgroundColor(getResources().getColor(android.R.color.white));
 
+                    // Add views in order
                     requestListLayout.addView(divider);
                     rideItemLayout.addView(rideDetails);
                     rideItemLayout.addView(acceptButton);
@@ -137,6 +160,11 @@ public class RiderAcceptRequestFragment extends Fragment {
                 } // for loop
             } // onDataChange
 
+            /**
+             * Called if reading driveOffers is cancelled or fails. Shows an error toast.
+             *
+             * @param error DatabaseError with details of the failure
+             */
             @Override
             public void onCancelled(DatabaseError error) {
                 Toast.makeText(getContext(), "Failed to load ride offers", Toast.LENGTH_SHORT).show();

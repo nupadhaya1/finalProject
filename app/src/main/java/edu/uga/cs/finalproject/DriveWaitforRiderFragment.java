@@ -1,3 +1,10 @@
+/**
+ * Fragment for drivers to wait for a rider to accept their offer.
+ *
+ * Displays offer details (date, from, to, passengers, request ID, status). 
+ * Listens for status updates from Firebase and navigates to ActiveTripDriver 
+ * when the offer is accepted. Allows canceling or updating the offer.
+ */
 package edu.uga.cs.finalproject;
 
 import android.os.Bundle;
@@ -18,21 +25,59 @@ import com.google.firebase.database.ValueEventListener;
 
 public class DriveWaitforRiderFragment extends Fragment {
 
-    // create info variables
+    /**
+     * Argument key for ride date.
+     */
     private static final String ARG_DATE = "date";
+
+    /**
+     * Argument key for start location.
+     */
     private static final String ARG_FROM = "from";
+
+    /**
+     * Argument key for destination.
+     */
     private static final String ARG_TO = "to";
+
+    /**
+     * Argument key for passenger count.
+     */
     private static final String ARG_PASSENGERS = "passengers";
+
+    /**
+     * Argument key for ride ID.
+     */
     private static final String ARG_RIDE_ID = "rideId";
+
+    /**
+     * Argument key for status.
+     */
     private static final String ARG_STATUS = "status";
 
-    // listener and database
+    /**
+     * Firebase reference for this offer.
+     */
     private DatabaseReference rideRef;
+
+    /**
+     * Listener for status changes.
+     */
     private ValueEventListener statusListener;
 
+    /**
+     * Required empty public constructor.
+     */
     public DriveWaitforRiderFragment() {
     }
 
+    /**
+     * Factory method to create a new instance with offer details.
+     *
+     * @param offer       The unique offer ID.
+     * @param driverOffer The DriverOffer object containing details.
+     * @return A new instance of DriveWaitforRiderFragment.
+     */
     public static DriveWaitforRiderFragment newInstance(String offer, DriverOffer driverOffer) {
         DriveWaitforRiderFragment fragment = new DriveWaitforRiderFragment();
         Bundle args = new Bundle();
@@ -46,12 +91,18 @@ public class DriveWaitforRiderFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Inflates the fragment layout, displays offer details, and sets up listeners.
+     *
+     * @param inflater           LayoutInflater to inflate views.
+     * @param container          Parent view to attach to.
+     * @param savedInstanceState Previous state data, if any.
+     * @return The root View of the fragment.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // create a view
         View view = inflater.inflate(R.layout.fragment_drive_wait_for_rider, container, false);
 
-        // create and intialize UI elements
         TextView dateText = view.findViewById(R.id.dateText);
         TextView fromText = view.findViewById(R.id.fromText);
         TextView toText = view.findViewById(R.id.toText);
@@ -62,68 +113,52 @@ public class DriveWaitforRiderFragment extends Fragment {
         Button updateButton = view.findViewById(R.id.updateRideRequest);
 
         Bundle args = getArguments();
-
-        // check arguements
         if (args != null) {
-
-            // initialize date,from,to, passengers, rideId
             String date = args.getString(ARG_DATE);
             String from = args.getString(ARG_FROM);
             String to = args.getString(ARG_TO);
             String passengers = args.getString(ARG_PASSENGERS);
             String rideId = args.getString(ARG_RIDE_ID);
 
-            // set the textboxes
             dateText.setText("Date: " + date);
             fromText.setText("From: " + from);
             toText.setText("To: " + to);
             passengersText.setText("Passengers: " + passengers);
             rideIdText.setText("Request ID: " + rideId);
 
-            // initialze the ride database
             rideRef = FirebaseDatabase.getInstance().getReference("driveOffers").child(rideId);
-
             MainScreen.isInWaitingFragment = true;
             MainScreen.currentWaitingRef = rideRef;
 
-            // create a listener
             statusListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     RideRequest updatedRide = snapshot.getValue(RideRequest.class);
-                    // check to see if updateRide isnt null
                     if (updatedRide != null) {
                         statusText.setText("Status: " + updatedRide.status);
-
-                        // check if accept
                         if ("accepted".equalsIgnoreCase(updatedRide.status)) {
-                            Fragment activeTripFragment = new ActiveTripDriver();
+                            ActiveTripDriver activeTripFragment = new ActiveTripDriver();
                             Bundle bundle = new Bundle();
-                            bundle.putString("rideId", rideId); // Pass rideId so the next fragment knows
+                            bundle.putString("rideId", rideId);
                             activeTripFragment.setArguments(bundle);
-
                             getParentFragmentManager().beginTransaction()
                                     .replace(R.id.fragmentContainerView, activeTripFragment)
                                     .addToBackStack(null)
                                     .commit();
-                        } // if statement
-
+                        }
                     } else {
                         statusText.setText("Status: canceled or not found");
-                    } // end of if else statement
-
-                } // onDataChange
+                    }
+                }
 
                 @Override
                 public void onCancelled(DatabaseError error) {
                     Toast.makeText(getContext(), "Error loading ride status", Toast.LENGTH_SHORT).show();
-                } // onCancelled
+                }
             };
 
-            // adda listener
             rideRef.addValueEventListener(statusListener);
 
-            // add listener to  button
             cancelButton.setOnClickListener(v -> {
 
                 // if ride ref is not null, add a listener and replace fragment
@@ -131,8 +166,6 @@ public class DriveWaitforRiderFragment extends Fragment {
                     rideRef.removeValue()
                             .addOnSuccessListener(aVoid -> {
                                 Toast.makeText(getContext(), "Ride offer canceled", Toast.LENGTH_SHORT).show();
-
-                                // Instead of popBackStack(), manually replace with DriverFragment
                                 getParentFragmentManager().beginTransaction()
                                         .replace(R.id.fragmentContainerView, new DriverFragment())
                                         .commit();
@@ -142,44 +175,38 @@ public class DriveWaitforRiderFragment extends Fragment {
                 } // if statement
             });
 
-
             updateButton.setOnClickListener(v -> {
                 // if update button is pressed pull up update fragment
                 if (rideRef != null) {
+                    ActualUpdateOfferFragment updateFragment = new ActualUpdateOfferFragment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("offerId", args.getString(ARG_RIDE_ID)); // Pass offerId safely
-
-                    ActualUpdateOfferFragment actualUpdateOfferFragment = new ActualUpdateOfferFragment();
-                    actualUpdateOfferFragment.setArguments(bundle);
-
+                    bundle.putString("offerId", rideId);
+                    updateFragment.setArguments(bundle);
                     getParentFragmentManager().beginTransaction()
-                            .replace(R.id.fragmentContainerView, actualUpdateOfferFragment)
+                            .replace(R.id.fragmentContainerView, updateFragment)
                             .addToBackStack(null)
                             .commit();
                 } // if statement
             });
+        }
 
-        } // if statement
-
-        // return view
         return view;
+    }
 
-    } // onCreateView
-
+    /**
+     * Cleans up listeners and flags when the view is destroyed.
+     */
     @Override
     public void onDestroyView() {
         MainScreen.isInWaitingFragment = false;
         MainScreen.currentWaitingRef = null;
-
         super.onDestroyView();
 
-        // if rider is null and status listener is null
         if (rideRef != null && statusListener != null) {
 
             rideRef.removeEventListener(statusListener);
 
-        } // if statement
+        }
 
-    } // onDestroyView
-
-} // DriverWaitForRideFragment
+    }
+}

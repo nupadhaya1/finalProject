@@ -1,3 +1,12 @@
+/**
+ * Fragment for creating and submitting ride requests.
+ * 
+ * This fragment allows users to enter pickup and drop-off locations,
+ * specify the number of passengers, and select a date for the ride.
+ * Upon submission, the ride request is posted to Firebase Realtime Database,
+ * and the user is navigated to a waiting screen.
+ * 
+ */
 package edu.uga.cs.finalproject;
 
 import android.os.Bundle;
@@ -25,10 +34,20 @@ public class RideFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    /**
+     * Required empty public constructor.
+     */
     public RideFragment() {
-        // Required empty public constructor
     }
 
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     * @param param1 First parameter.
+     * @param param2 Second parameter.
+     * @return A new instance of fragment RideFragment.
+     */
     public static RideFragment newInstance(String param1, String param2) {
         RideFragment fragment = new RideFragment();
         Bundle args = new Bundle();
@@ -36,12 +55,23 @@ public class RideFragment extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    } // Ride Fragment
+    }
 
+    /**
+     * Called to instantiate the view hierarchy associated with the fragment.
+     * Initializes input fields, autofills today's date, and sets up
+     * click listeners for posting a ride request and navigating to offers.
+     *
+     * @param inflater           The LayoutInflater object that can be used to
+     *                           inflate views.
+     * @param container          If non-null, this is the parent view to attach the
+     *                           fragment.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed.
+     * @return The View for the fragment's UI.
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // create a view
+            Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_ride, container, false);
 
         // Get references to inputs
@@ -66,23 +96,22 @@ public class RideFragment extends Fragment {
                 passengersInt = Integer.parseInt(passengersInput) * -1;
             } catch (NumberFormatException e) {
                 Toast.makeText(getContext(), "Passengers must be a valid number!", Toast.LENGTH_SHORT).show();
-                return; // Stop submitting if not a number
+                return;
             }
             String passengers = String.valueOf(passengersInt);
 
-            String enteredDate = dateInput.getText().toString().trim(); // <-- Get live value
+            String enteredDate = dateInput.getText().toString().trim();
 
             if (from.isEmpty() || to.isEmpty() || passengers.isEmpty() || enteredDate.isEmpty()) {
                 Toast.makeText(getContext(), "Please fill out all fields", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-
             // 2. Use whatever is entered into the date field
             RideRequest rideRequest = new RideRequest(enteredDate, from, to, passengers);
             DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("rideRequests");
 
-            String rideId = dbRef.push().getKey(); // generate unique ID
+            String rideId = dbRef.push().getKey();
             if (rideId != null) {
                 dbRef.child(rideId).setValue(rideRequest)
                         .addOnSuccessListener(aVoid -> {
@@ -90,12 +119,13 @@ public class RideFragment extends Fragment {
 
                             getParentFragmentManager()
                                     .beginTransaction()
-                                    .replace(R.id.fragmentContainerView, RideWaitForDriverFragment.newInstance(rideId, rideRequest))
+                                    .replace(R.id.fragmentContainerView,
+                                            RideWaitForDriverFragment.newInstance(rideId, rideRequest))
                                     .addToBackStack(null)
                                     .commit();
                         })
-                        .addOnFailureListener(e ->
-                                Toast.makeText(getContext(), "Failed to post request", Toast.LENGTH_SHORT).show());
+                        .addOnFailureListener(
+                                e -> Toast.makeText(getContext(), "Failed to post request", Toast.LENGTH_SHORT).show());
             }
         });
 
@@ -109,9 +139,6 @@ public class RideFragment extends Fragment {
                     .commit();
         });
 
-
-
-        // return view
         return view;
-    } // onCreateView
-} // RideFragment
+    }
+}
